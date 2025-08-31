@@ -1,11 +1,13 @@
-import Logger from '@nan0web/log'
-import DB from '@nan0web/db-fs'
+import ReleaseDocument from "./Release/Document.js"
 
 /**
  * @typedef {Object} ReleaseConfig
- * @property {string} version - Release version
- * @property {string} projectPath - Path to project root
- * @property {Map<string, Function>} tasks - Map of task IDs to validation functions
+ * @property {string} [version] - Release version
+ * @property {string | number | Date | undefined} [createdAt] -
+ * @property {string | number | Date | undefined} [startAt] -
+ * @property {string | number | Date | undefined} [planAt] -
+ * @property {string | number | Date | undefined} [completeAt] -
+ * @property {string | ReleaseDocument} [document] -
  */
 
 /**
@@ -14,14 +16,18 @@ import DB from '@nan0web/db-fs'
 class Release {
 	/** @type {string} */
 	version
-	/** @type {string} */
-	projectPath
-	/** @type {Map<string, Function>} */
-	tasks
-	/** @type {Logger} */
-	logger
-	/** @type {DB} */
-	db
+	/** @type {Date} */
+	createdAt
+	/** @type {Date?} */
+	startAt
+	/** @type {Date?} */
+	planAt
+	/** @type {Date?} */
+	completeAt
+	// /** @type {Map<string, Function>} */
+	/** @type {ReleaseDocument} */
+	document
+	// tasks
 
 	/**
 	 * Creates a Release instance
@@ -30,15 +36,23 @@ class Release {
 	constructor(config = {}) {
 		const {
 			version = '0.0.0',
-			projectPath = '.',
-			tasks = new Map()
+			createdAt = new Date(),
+			startAt,
+			planAt,
+			completeAt,
+			document,
 		} = config
 
 		this.version = String(version)
-		this.projectPath = String(projectPath)
-		this.tasks = tasks
-		this.logger = new Logger()
-		this.db = new DB({ cwd: this.projectPath })
+		this.createdAt = new Date(createdAt)
+		this.startAt = startAt ? new Date(startAt) : null
+		this.planAt = planAt ? new Date(planAt) : null
+		this.completeAt = completeAt ? new Date(completeAt) : null
+		this.document = ReleaseDocument.from(document)
+	}
+
+	get path() {
+		return [...this.version.replace("v", "").split(".").slice(0, 2), this.version].join("/")
 	}
 
 	/**

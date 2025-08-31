@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import DB from '@nan0web/db-fs'
 import Logger from '@nan0web/log'
-import { Changelog } from '@nan0web/markdown'
+import { Changelog } from '@nan0web/changelog'
 import { Command } from '@nan0web/co'
 
 /**

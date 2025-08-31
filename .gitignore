@@ -1,5 +1,5 @@
-chat/
-coverage/
-node_modules/
-test_data/
+/chat/
+/coverage/
+/node_modules/
+/test_data/
 me.md

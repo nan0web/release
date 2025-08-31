@@ -1,26 +1,30 @@
 {
 	"name": "@nan0web/release",
 	"version": "1.0.0",
-	"description": "Release package with tagging and publishing functionality.",
+	"description": "Project Management as Code, Git-Native, GPG-Signed, Test-Driven",
+	"main": "src/index.js",
+	"types": "types/index.d.ts",
 	"type": "module",
 	"bin": {
 		"release": "./bin/release.js"
 	},
 	"scripts": {
 		"release": "node ./bin/release.js",
-		"test": "node --test"
+		"test": "node --test src/**/*.test.js --ignore src/README.md.test.js",
+		"test:docs": "node --test src/README.md.test.js"
 	},
 	"dependencies": {
 		"supports-color": "^9.4.0"
 	},
 	"devDependencies": {
+		"@nan0web/changelog": "workspace:*",
 		"@nan0web/co": "workspace:*",
 		"@nan0web/db": "workspace:*",
 		"@nan0web/db-fs": "workspace:*",
 		"@nan0web/log": "workspace:*",
 		"@nan0web/markdown": "workspace:*",
-		"@nan0web/changelog": "workspace:*",
-		"@nan0web/types": "workspace:*"
+		"@nan0web/types": "workspace:*",
+		"@nan0web/verse": "workspace:*"
 	},
 	"peerDependencies": {
 		"@nan0web/co": "^1.0.0",
@@ -29,6 +33,7 @@
 		"@nan0web/log": "^1.0.0",
 		"@nan0web/markdown": "^1.0.0",
 		"@nan0web/changelog": "^1.0.0",
-		"@nan0web/types": "^1.0.0"
+		"@nan0web/types": "^1.0.0",
+		"@nan0web/verse": "^1.0.0"
 	}
 }

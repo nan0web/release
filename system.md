@@ -95,7 +95,7 @@ const RRS = {
     tsconfig: 100   // Наявність tsconfig.json
   },
   optional: {       // Макс 24
-    readmeTest: 10, // src/README.md.test.js
+    readmeTest: 10, // src/README.md.js
     playground: 10, // Демо-сторінки
     releaseMd: 1,   // releases/1/0/v1.0.0/release.md
 		readmeMd: 1,    // `README.md` існує
@@ -124,7 +124,7 @@ const RRS = {
 │       └── release.test.js  ← Тести
 ├── src/
 │   ├── index.js
-│   └── README.md.test.js    ← Автодокументація
+│   └── README.md.js         ← Автодокументація
 └── system.md                ← Локальна специфікація
 ```
 
@@ -212,7 +212,7 @@ flowchart TD
     W --> Y["@nan0web/package^1.0.0"]
 
     %% Документація %%
-    K --> Z[src/README.md.test.js]
+    K --> Z[src/README.md.js]
     Z --> AA[README.md]
     AA --> AB[.datasets/README.dataset.jsonl]
 
@@ -309,7 +309,7 @@ releases/
 │     └─ release.test.js
 ├─ src/
 │  ├─ index.js
-│  └─ README.md.test.js          ← Тест, що генерує README.md
+│  └─ README.md.js          ← Тест, що генерує README.md
 ├─ .editorconfig
 ├─ CONTRIBUTING.md
 ├─ LICENSE

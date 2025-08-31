@@ -1,22 +1,23 @@
 /**
  * # Project Management as Code Architecture
- * 
+ *
  * This architecture implements project management through automated testing,
  * where each task is represented as a test case that validates system behavior.
- * 
+ *
  * ## Core Concepts
- * 
+ *
  * 1. **Tasks as Tests**: Each project task becomes a test suite that validates
  *    implementation correctness
  * 2. **Status Tracking**: Task status moves automatically through CI/CD pipeline
  *    when tests pass/fail
  * 3. **Release Validation**: Releases are validated by running task tests as
  *    part of the release process
- * 
+ *
  * ## Implementation Details
  */
 
-import { TestSuite } from '@nan0web/types'
+// import { TestSuite } from '@nan0web/types'
+class TestSuite {}
 
 /**
  * Task management through node:test infrastructure
@@ -98,7 +99,7 @@ export class ProjectManagement {
    */
   async validateRelease(version) {
     const projectState = await this.validateProjectState()
-    
+
     return {
       version,
       timestamp: new Date().toISOString(),

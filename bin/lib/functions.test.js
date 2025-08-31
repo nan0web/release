@@ -1,4 +1,4 @@
-import { test } from 'node:test'
+import { describe, it } from 'node:test'
 import assert from 'node:assert'
 import { existsSync, writeFileSync, unlinkSync, mkdirSync, readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
@@ -21,12 +21,12 @@ const __dirname = dirname(__filename)
 const tempDir = resolve(__dirname, 'temp')
 const tempPackageJson = resolve(tempDir, 'package.json')
 
-test('functions.js', () => {
+describe('functions.js', () => {
 	// Setup temporary directory and package.json for testing
 	if (!existsSync(tempDir)) mkdirSync(tempDir)
 	writeFileSync(tempPackageJson, JSON.stringify({ name: 'test-package' }))
 
-	test('detectPackageManager returns correct package manager', () => {
+	it('detectPackageManager returns correct package manager', () => {
 		// Create temporary lock files to simulate package managers
 		const pnpmLock = resolve(tempDir, 'pnpm-lock.yaml')
 		const yarnLock = resolve(tempDir, 'yarn.lock')
@@ -43,7 +43,7 @@ test('functions.js', () => {
 		assert.strictEqual(detectPackageManager(), 'npm')
 	})
 
-	test('getPackageManagerCommands returns correct commands', () => {
+	it('getPackageManagerCommands returns correct commands', () => {
 		const pnpmCommands = getPackageManagerCommands('pnpm')
 		assert.ok(pnpmCommands.cacheClean)
 		assert.ok(pnpmCommands.install)
@@ -57,7 +57,7 @@ test('functions.js', () => {
 		assert.ok(pnpmCommands.storeStatus)
 	})
 
-	test('checkPackageJson validates required scripts and dependencies', () => {
+	it('checkPackageJson validates required scripts and dependencies', () => {
 		const result = checkPackageJson(tempPackageJson, true)
 		assert.strictEqual(result, 0)
 
@@ -70,7 +70,7 @@ test('functions.js', () => {
 		assert.ok(pkg.devDependencies.husky)
 	})
 
-	test('checkPreCommits handles missing pre-commit file', () => {
+	it('checkPreCommits handles missing pre-commit file', () => {
 		const result = checkPreCommits(tempPackageJson, true)
 		assert.strictEqual(result, 0)
 
@@ -79,26 +79,26 @@ test('functions.js', () => {
 		assert.ok(existsSync(preCommitFile))
 	})
 
-	test('runCommand executes shell commands', () => {
+	it('runCommand executes shell commands', () => {
 		// This test will pass if the command runs successfully
 		assert.doesNotThrow(() => {
 			runCommand('echo "test"', 'Failed to echo')
 		})
 	})
 
-	test('checkUncommitted validates git status', () => {
+	it('checkUncommitted validates git status', () => {
 		// This test assumes no uncommitted changes in the test environment
 		assert.doesNotThrow(() => {
 			checkUncommitted({ devDependencies: {}, dependencies: {} })
 		})
 	})
 
-	test('tagExists checks for existing git tags', () => {
+	it('tagExists checks for existing git tags', () => {
 		// Assuming no tags exist initially
 		assert.strictEqual(tagExists('v0.0.0'), false)
 	})
 
-	test('tagRelease creates and pushes git tags', () => {
+	it('tagRelease creates and pushes git tags', () => {
 		// Mock version for testing
 		const version = '0.0.1-test'
 		const tag = `v${version}`
@@ -113,7 +113,7 @@ test('functions.js', () => {
 		spawnSync('git', ['tag', '-d', tag], { cwd: tempDir })
 	})
 
-	test('tagRelease handles existing tags', () => {
+	it('tagRelease handles existing tags', () => {
 		const version = '0.0.2-test'
 		const tag = `v${version}`
 

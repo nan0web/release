@@ -1,5 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
+import FS from "@nan0web/db-fs"
 import { existsSync, writeFileSync, unlinkSync, mkdirSync, readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -11,13 +12,16 @@ const __dirname = dirname(__filename)
 const tempDir = resolve(__dirname, 'temp')
 const tempPackageJson = resolve(tempDir, 'package.json')
 
+const fs = new FS()
+
 describe('release.js', async () => {
-	// Setup temporary directory and package.json for testing
-	if (!existsSync(tempDir)) mkdirSync(tempDir)
-	writeFileSync(tempPackageJson, JSON.stringify({
+	await fs.connect()
+	const tempDir = "tmp/release"
+	const db = fs.extract(tempDir)
+	await db.writeDocument("package.json", {
 		name: 'test-package',
 		version: '0.0.1-test'
-	}))
+	})
 
 	// Mock process.cwd to return tempDir
 	const originalCwd = process.cwd
@@ -65,5 +69,5 @@ describe('release.js', async () => {
 
 	// Cleanup
 	process.cwd = originalCwd
-	unlinkSync(tempPackageJson)
+	await db.dropDocument("package.json")
 })
