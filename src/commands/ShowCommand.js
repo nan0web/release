@@ -38,7 +38,7 @@ export default class ShowCommand extends SubCommand {
 			this.logger.info(`Version      : ${release.version}`)
 			this.logger.info(`Created at   : ${release.createdAt.toISOString()}`)
 			this.logger.info(`Path         : ${this.db.cwd}`)
-		} catch (e) {
+		} catch (/** @type {any} */ e) {
 			this.logger.warn(`Unable to import release.js – ${e.message}`)
 		}
 
@@ -51,7 +51,7 @@ export default class ShowCommand extends SubCommand {
 				const firstLine = md.split("\n")[0]
 				this.logger.info(`Release note : ${firstLine}`)
 			}
-		} catch (e) {
+		} catch (/** @type {any} */ e) {
 			this.logger.warn(`release.md not found – ${e.message}`)
 		}
 	}

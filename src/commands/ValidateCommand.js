@@ -37,7 +37,7 @@ export default class ValidateCommand extends SubCommand {
 		try {
 			const { default: rel } = await import(releaseJsPath)
 			releaseInst = rel
-		} catch (e) {
+		} catch (/** @type {any} */ e) {
 			this.logger.error(`Failed to import release.js – ${e.message}`)
 			return
 		}

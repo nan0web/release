@@ -26,12 +26,13 @@ export class PublishCommandOptions {
  * @extends {CommandMessage}
  */
 export class PublishCommandMessage extends CommandMessage {
-	/** @type {PublishCommandOptions} */
-	opts
+	/** @returns {PublishCommandOptions} */
+	get opts() {
+		const opts = super.opts
+		return PublishCommandOptions.from(opts)
+	}
 	constructor(input = {}) {
 		super(input)
-		const { opts = {} } = input
-		this.opts = PublishCommandOptions.from(opts)
 	}
 }
 
@@ -112,8 +113,9 @@ export default class PublishCommand extends Command {
 	 * @param {string[]} args
 	 * @param {string} errorMsg
 	 * @param {FS} fs
+	 * @param {number[]} [okCodes=[0]]
 	 */
-	async #run(cmd, args, errorMsg, fs) {
+	async #run(cmd, args, errorMsg, fs, okCodes = [0]) {
 		let content = ""
 		const onData = (chunk) => {
 			content += String(chunk)
@@ -125,10 +127,11 @@ export default class PublishCommand extends Command {
 			}
 		}
 
-		const cwd = fs.absolute()
+		let cwd = fs.absolute()
+		if ("/" === cwd && "." === fs.cwd) cwd = fs.cwd
 		const response = await runSpawn(cmd, args, { onData, cwd })
 
-		if (0 !== response.code) {
+		if (!okCodes.includes(response.code)) {
 			this.logger.error(errorMsg)
 			process.exit(1)
 		}

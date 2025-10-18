@@ -7,6 +7,21 @@ class AppCommandOptions {
 	quiet = false
 	/** @type {string} */
 	releaseDir = "./releases"
+	/** @type {boolean} */
+	write = false
+	/** @type {string} */
+	user = "anonymous"
+	/** @type {boolean} */
+	ignoreFailTests = false
+	/** @type {boolean} */
+	full = false
+	
+	/**
+	 * @param {Object} input
+	 */
+	constructor(input = {}) {
+		Object.assign(this, input)
+	}
 }
 
 export default AppCommandOptions

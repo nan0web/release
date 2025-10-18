@@ -55,7 +55,9 @@ import { ok, strictEqual } from "node:assert"
 	 * @returns {Array<{title: string, tasks: Array<{content: string, status: string, slug: string}>}>} Sections with tasks
 	 */
 	extractSections(lines) {
+		/** @type {Array<{title: string, tasks: Array<{content: string, status: string, slug: string}>}>} */
 		const sections = []
+		/** @type {{title: string, tasks: Array<{content: string, status: string, slug: string}>} | null} */
 		let currentSection = null
 		
 		for (let i = 0; i < lines.length; i++) {
@@ -65,7 +67,7 @@ import { ok, strictEqual } from "node:assert"
 			if (line.startsWith('## ')) {
 				currentSection = {
 					title: line.slice(3).trim(),
-					tasks: []
+					tasks: /** @type {Array<{content: string, status: string, slug: string}>} */([])
 				}
 				sections.push(currentSection)
 				continue
@@ -101,7 +103,7 @@ import { ok, strictEqual } from "node:assert"
 			code += `	describe("${section.title}", () => {
 `
 			
-			section.tasks.forEach(task => {
+			section.tasks.forEach(/** @param {{status: string, content: string}} task */task => {
 				switch (task.status) {
 					case 'Draft':
 						code += `		it.todo("${task.content}", () => {

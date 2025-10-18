@@ -52,7 +52,7 @@ class ReleaseDocument extends Markdown {
 		this.date = new Date(dateParts.join(" - ").trim())
 
 		const sections = []
-		/** @type {{title: string, tasks: []} |} */
+		/** @type {{title: string, tasks: Array} | null} */
 		let currentSection = null
 		for (const el of result) {
 			if (el instanceof MDHeading2) {

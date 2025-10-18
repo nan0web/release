@@ -1,4 +1,5 @@
 import ReleaseDocument from "./Release/Document.js"
+import Logger from '@nan0web/log'
 
 /**
  * @typedef {Object} ReleaseConfig
@@ -8,6 +9,7 @@ import ReleaseDocument from "./Release/Document.js"
  * @property {string | number | Date | undefined} [planAt] -
  * @property {string | number | Date | undefined} [completeAt] -
  * @property {string | ReleaseDocument} [document] -
+ * @property {Map<string, Function>} [tasks] - Task map with test functions
  */
 
 /**
@@ -24,10 +26,12 @@ class Release {
 	planAt
 	/** @type {Date?} */
 	completeAt
-	// /** @type {Map<string, Function>} */
+	/** @type {Map<string, Function>} */
+	tasks
 	/** @type {ReleaseDocument} */
 	document
-	// tasks
+	/** @type {Logger} */
+	logger
 
 	/**
 	 * Creates a Release instance
@@ -41,6 +45,7 @@ class Release {
 			planAt,
 			completeAt,
 			document,
+			tasks = new Map()
 		} = config
 
 		this.version = String(version)
@@ -49,6 +54,8 @@ class Release {
 		this.planAt = planAt ? new Date(planAt) : null
 		this.completeAt = completeAt ? new Date(completeAt) : null
 		this.document = ReleaseDocument.from(document)
+		this.tasks = tasks
+		this.logger = new Logger()
 	}
 
 	get path() {
@@ -61,9 +68,9 @@ class Release {
 	 */
 	async validate() {
 		const results = {
-			passed: [],
-			failed: [],
-			pending: []
+			passed: /** @type {Array} */([]),
+			failed: /** @type {Array<{taskId: any, error: string}>} */([]),
+			pending: /** @type {Array} */([])
 		}
 
 		for (const [taskId, testFn] of this.tasks.entries()) {
@@ -71,7 +78,7 @@ class Release {
 				await testFn()
 				results.passed.push(taskId)
 			} catch (error) {
-				results.failed.push({ taskId, error: error.message })
+				results.failed.push({ taskId, error: /** @type {Error} */(error).message })
 			}
 		}
 

@@ -41,7 +41,7 @@ class ChatCommand extends SubCommand {
 		}
 
 		const now = Date.now()
-		const username = ctx.opts.user
+		const username = /** @type {string} */(ctx.opts.user)
 		const chatPath = join(this.db.cwd, "chat", "2025", "08", `${now}.${username}.md`)
 
 		// ensure directory exists

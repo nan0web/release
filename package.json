@@ -10,44 +10,34 @@
 		"release": "./bin/release.js"
 	},
 	"scripts": {
-		"release": "node ./bin/release.js",
-		"test": "node --test src/**/*.test.js --ignore src/README.md.test.js",
-		"test:docs": "node --test src/README.md.test.js",
 		"build": "tsc",
 		"clean": "rm -rf .cache/ && rm -rf dist/",
 		"clean:modules": "rm -rf node_modules",
+		"test": "node --test \"src/**/*.test.js\" | nan0test parse --fail",
+		"test:docs": "node --test \"src/README.md.js\"",
 		"test:release": "node --test \"releases/**/*.test.js\"",
 		"test:coverage": "node --experimental-test-coverage --test-coverage-include=\"src/**/*.js\" --test-coverage-exclude=\"src/**/*.test.js\" --test \"src/**/*.test.js\"",
 		"test:coverage:collect": "nan0test coverage",
 		"test:status": "nan0test status",
+		"release": "node ./bin/release.js",
 		"precommit": "npm test",
 		"prepush": "npm test",
 		"prepare": "husky",
 		"playground": "node playground/main.js"
 	},
 	"dependencies": {
-		"supports-color": "^9.4.0"
-	},
-	"devDependencies": {
-		"@nan0web/changelog": "workspace:*",
-		"@nan0web/co": "workspace:*",
-		"@nan0web/db": "workspace:*",
-		"@nan0web/db-fs": "workspace:*",
-		"@nan0web/log": "workspace:*",
-		"@nan0web/markdown": "workspace:*",
-		"@nan0web/types": "workspace:*",
-		"@nan0web/verse": "workspace:*",
-		"@nan0web/test": "workspace:*",
-		"husky": "^9.1.7"
-	},
-	"peerDependencies": {
+		"@nan0web/changelog": "^1.0.0",
 		"@nan0web/co": "^1.0.0",
 		"@nan0web/db": "^1.0.0",
 		"@nan0web/db-fs": "^1.0.0",
 		"@nan0web/log": "^1.0.0",
 		"@nan0web/markdown": "^1.0.0",
-		"@nan0web/changelog": "^1.0.0",
 		"@nan0web/types": "^1.0.0",
-		"@nan0web/verse": "^1.0.0"
+		"@nan0web/verse": "^1.0.0",
+		"supports-color": "^9.4.0"
+	},
+	"devDependencies": {
+		"@nan0web/test": "workspace:*",
+		"husky": "^9.1.7"
 	}
 }
