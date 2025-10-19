@@ -2,9 +2,8 @@
 
 import { Command } from '@nan0web/co'
 import Logger from '@nan0web/log'
-import { resolve } from 'node:path'
-import DB from "./db/ReleaseDB.js"
 import FS from "@nan0web/db-fs"
+import DB from "./db/ReleaseDB.js"
 import Release from './Release.js'
 import ChatCommand from './commands/ChatCommand.js'
 import HostCommand from './commands/HostCommand.js'
@@ -62,11 +61,22 @@ export default class ReleaseCLI extends Command {
 
 		const rootDb = this.fs.extract(/** @type {string} */(msg.opts.releaseDir))
 
-		const indexJs = rootDb.absolute("index.js")
-		const currentJs = rootDb.absolute("current.js")
-		this.releases = (await import(indexJs)).default
-		this.current = (await import(currentJs)).default
-		this.logger.info(Object.keys(this.releases).length, "release(s) found")
+		const indexStat = await rootDb.statDocument("index.js")
+		const currentStat = await rootDb.statDocument("current.js")
+		if (indexStat.exists && currentStat.exists) {
+			const indexJs = rootDb.absolute("index.js")
+			const currentJs = rootDb.absolute("current.js")
+			try {
+				this.releases = (await import(indexJs)).default
+				this.current = (await import(currentJs)).default
+				this.logger.info(Object.keys(this.releases).length, "release(s) found")
+			} catch (e) {
+				this.logger.error("Failed to load release database", e)
+				this.current = null
+			}
+		} else {
+			this.logger.info("No releases initialized. Use 'release init <version>' to create your first release.")
+		}
 
 		const globalOpts = { logger: this.logger }
 		this.addSubcommand(new ListCommand(globalOpts))

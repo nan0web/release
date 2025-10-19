@@ -19,7 +19,7 @@
 		"test:coverage": "node --experimental-test-coverage --test-coverage-include=\"src/**/*.js\" --test-coverage-exclude=\"src/**/*.test.js\" --test \"src/**/*.test.js\"",
 		"test:coverage:collect": "nan0test coverage",
 		"test:status": "nan0test status",
-		"release": "node ./bin/release.js",
+		"release": "node ./bin/nan0release.js publish",
 		"precommit": "npm test",
 		"prepush": "npm test",
 		"prepare": "husky",

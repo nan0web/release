@@ -1,12 +1,16 @@
 import { CommandMessage } from "@nan0web/co"
 import AppCommandOptions from "./AppCommandOptions.js"
 
-class AppCommandMessage extends CommandMessage {
+export default class AppCommandMessage extends CommandMessage {
 	/** @returns {AppCommandOptions} */
 	get opts() {
-		return /** @type {AppCommandOptions} */(super.opts)
+		return /** @type {AppCommandOptions} */ (super.opts)
 	}
-	
+
+	set opts(value) {
+		super.opts = value
+	}
+
 	/**
 	 * @param {*} input
 	 * @returns {AppCommandMessage}
@@ -16,5 +20,3 @@ class AppCommandMessage extends CommandMessage {
 		return new AppCommandMessage(input)
 	}
 }
-
-export default AppCommandMessage

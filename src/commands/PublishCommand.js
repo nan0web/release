@@ -31,6 +31,9 @@ export class PublishCommandMessage extends CommandMessage {
 		const opts = super.opts
 		return PublishCommandOptions.from(opts)
 	}
+	set opts(value) {
+		super.opts = value
+	}
 	constructor(input = {}) {
 		super(input)
 	}
