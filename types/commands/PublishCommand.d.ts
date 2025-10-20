@@ -13,6 +13,7 @@ export class PublishCommandOptions {
  */
 export class PublishCommandMessage extends CommandMessage {
     constructor(input?: {});
+    set opts(arg: PublishCommandOptions);
     /** @returns {PublishCommandOptions} */
     get opts(): PublishCommandOptions;
 }

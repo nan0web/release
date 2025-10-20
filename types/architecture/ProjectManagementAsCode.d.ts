@@ -12,7 +12,7 @@ export class ProjectManagement {
     constructor(config?: {
         projectPath?: string | undefined;
         autoTrack?: boolean | undefined;
-    });
+    } | undefined);
     /** @type {string} */
     projectPath: string;
     /** @type {boolean} */

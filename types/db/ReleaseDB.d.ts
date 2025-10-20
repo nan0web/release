@@ -25,6 +25,6 @@ declare class ReleaseDB extends DBFS {
     /**
      * @returns {Array<string>} List of discovered release root paths
      */
-    get releases(): Array<string>;
+    get releases(): string[];
 }
 import DBFS from "@nan0web/db-fs";

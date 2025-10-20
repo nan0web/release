@@ -108,7 +108,7 @@ export default class PublishCommand extends Command {
 		await this.#run('git', ['push', 'origin', 'main', '--no-verify'], 'Git push failed', fs)
 		await this.#run('git', ['push', 'origin', '--tags', '--no-verify'], 'Tag push failed', fs)
 
-		this.logger.success(`@${pkg.name}@${pkg.version} published. Zero becomes script of a life 🌱`)
+		this.logger.success(`${pkg.name}@${pkg.version} published. Zero becomes script of a life 🌱`)
 	}
 
 	/**

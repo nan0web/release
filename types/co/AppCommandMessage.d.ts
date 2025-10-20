@@ -1,10 +1,10 @@
-export default AppCommandMessage;
-declare class AppCommandMessage extends CommandMessage {
+export default class AppCommandMessage extends CommandMessage {
     /**
      * @param {*} input
      * @returns {AppCommandMessage}
      */
     static from(input: any): AppCommandMessage;
+    set opts(arg: AppCommandOptions);
     /** @returns {AppCommandOptions} */
     get opts(): AppCommandOptions;
 }
