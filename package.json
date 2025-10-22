@@ -26,7 +26,7 @@
 		"playground": "node playground/main.js"
 	},
 	"dependencies": {
-		"@nan0web/changelog": "^1.0.0",
+		"@nan0web/changelog": "^0.1.0",
 		"@nan0web/co": "^1.0.0",
 		"@nan0web/db": "^1.0.0",
 		"@nan0web/db-fs": "^1.0.0",
