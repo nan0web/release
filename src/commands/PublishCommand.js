@@ -3,6 +3,8 @@ import { Command, CommandMessage } from "@nan0web/co"
 import FS from "@nan0web/db-fs"
 import { runSpawn } from '@nan0web/test'
 
+/** @typedef {import("@nan0web/test/types/exec/runSpawn").SpawnResult} SpawnResult */
+
 export class PublishCommandOptions {
 	/** @type {string} */
 	tag
@@ -117,6 +119,7 @@ export default class PublishCommand extends Command {
 	 * @param {string} errorMsg
 	 * @param {FS} fs
 	 * @param {number[]} [okCodes=[0]]
+	 * @returns {Promise<SpawnResult>}
 	 */
 	async #run(cmd, args, errorMsg, fs, okCodes = [0]) {
 		let content = ""
@@ -132,6 +135,7 @@ export default class PublishCommand extends Command {
 
 		let cwd = fs.absolute()
 		if ("/" === cwd && "." === fs.cwd) cwd = fs.cwd
+		this.logger.debug(`% ${cmd} ${args.join(" ")} (${cwd})`)
 		const response = await runSpawn(cmd, args, { onData, cwd })
 
 		if (!okCodes.includes(response.code)) {
@@ -139,6 +143,7 @@ export default class PublishCommand extends Command {
 			process.exit(1)
 		}
 
+		this.logger.debug(response.text)
 		return response
 	}
 }

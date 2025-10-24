@@ -23,7 +23,8 @@ class PrefixedLogger extends Logger {
 		return super.success(this.PREFIX, ...args)
 	}
 	debug(...args) {
-		return super.debug(this.PREFIX, ...args)
+		const dimPrefix = Logger.DIM + this.PREFIX
+		return super.debug(dimPrefix, ...args)
 	}
 }
 
