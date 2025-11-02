@@ -1,28 +1,13 @@
 /** @typedef {import("@nan0web/test/types/exec/runSpawn").SpawnResult} SpawnResult */
-export class PublishCommandOptions {
-    /**
-     * @param {any} input
-     * @returns {PublishCommandOptions}
-     */
-    static from(input: any): PublishCommandOptions;
-    constructor(input?: {});
-    /** @type {string} */
-    tag: string;
-}
 /**
  * @extends {CommandMessage}
  */
-export class PublishCommandMessage extends CommandMessage {
-    constructor(input?: {});
-    set opts(arg: PublishCommandOptions);
-    /** @returns {PublishCommandOptions} */
-    get opts(): PublishCommandOptions;
+export class DepsCommandMessage extends CommandMessage {
 }
 /**
  * @extends {BaseCommand}
  */
 export default class PublishCommand extends BaseCommand {
-    static Message: typeof PublishCommandMessage;
     constructor(input?: {});
     /**
      * @docs
@@ -41,9 +26,9 @@ export default class PublishCommand extends BaseCommand {
      * ```bash
      * nan0release publish
      * ```
-     * @param {PublishCommandMessage} msg
+     * @param {DepsCommandMessage} msg
      */
-    run(msg: PublishCommandMessage): Promise<void>;
+    run(msg: DepsCommandMessage): Promise<void>;
 }
 export type SpawnResult = import("@nan0web/test/types/exec/runSpawn").SpawnResult;
 import { CommandMessage } from "@nan0web/co";

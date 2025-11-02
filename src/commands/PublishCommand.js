@@ -1,7 +1,6 @@
-import process from "node:process"
 import { Command, CommandMessage } from "@nan0web/co"
 import FS from "@nan0web/db-fs"
-import { runSpawn } from '@nan0web/test'
+import BaseCommand from "./BaseCommand.js"
 
 /** @typedef {import("@nan0web/test/types/exec/runSpawn").SpawnResult} SpawnResult */
 
@@ -42,9 +41,9 @@ export class PublishCommandMessage extends CommandMessage {
 }
 
 /**
- * @extends {Command}
+ * @extends {BaseCommand}
  */
-export default class PublishCommand extends Command {
+export default class PublishCommand extends BaseCommand {
 	static Message = PublishCommandMessage
 
 	constructor(input = {}) {
@@ -81,69 +80,35 @@ export default class PublishCommand extends Command {
 
 		const category = ["major", "minor", "patch"].find(c => msg.args.includes(c))
 		if (category) {
-			await this.#run('npm', ["version", category], "Unable to change version", fs)
+			await this._run('npm', ["version", category], "Unable to change version", fs)
 		}
 
 		const pkg = await fs.loadDocument('package.json', {})
 		const tag = `v${pkg.version}`
 
-		await this.#run('git', ["diff", "--quiet"], 'Uncommitted changes found. Commit or stash first.', fs)
+		await this._run('git', ["diff", "--quiet"], 'Uncommitted changes found. Commit or stash first.', fs)
 
 		this.logger.info(`🛜 nan0release: publishing @${pkg.name}@${pkg.version}`)
 
-		await this.#run('git', ["pull"], 'Failed to pull latest changes', fs)
-		await this.#run('npm', ["run", "clean"], 'Clean failed', fs)
-		await this.#run('npm', ["run", "build"], 'Build failed', fs)
-		await this.#run('npm', ["test"], 'Tests failed', fs)
+		await this._run('git', ["pull"], 'Failed to pull latest changes', fs)
+		await this._run('npm', ["run", "clean"], 'Clean failed', fs)
+		await this._run('npm', ["run", "build"], 'Build failed', fs)
+		await this._run('npm', ["test"], 'Tests failed', fs)
 
-		const tagsResult = await this.#run('git', ["tag"], "Failed to get tags", fs)
+		const tagsResult = await this._run('git', ["tag"], "Failed to get tags", fs)
 		const tags = tagsResult.text.split('\n').filter(Boolean)
 
 		if (!tags.includes(tag)) {
-			await this.#run('git', ['tag', '-a', tag, '-m', `Release ${pkg.version}`], 'Tag creation failed', fs)
+			await this._run('git', ['tag', '-a', tag, '-m', `Release ${pkg.version}`], 'Tag creation failed', fs)
 		} else {
 			this.logger.warn(`Tag ${tag} already exists`)
 		}
 
-		await this.#run('npm', ['publish', '--access', 'public'], 'Publish to npm failed', fs)
+		await this._run('npm', ['publish', '--access', 'public'], 'Publish to npm failed', fs)
 
-		await this.#run('git', ['push', 'origin', 'main', '--no-verify'], 'Git push failed', fs)
-		await this.#run('git', ['push', 'origin', '--tags', '--no-verify'], 'Tag push failed', fs)
+		await this._run('git', ['push', 'origin', 'main', '--no-verify'], 'Git push failed', fs)
+		await this._run('git', ['push', 'origin', '--tags', '--no-verify'], 'Tag push failed', fs)
 
 		this.logger.success(`${pkg.name}@${pkg.version} published. Zero becomes script of a life 🌱`)
-	}
-
-	/**
-	 * @param {string} cmd
-	 * @param {string[]} args
-	 * @param {string} errorMsg
-	 * @param {FS} fs
-	 * @param {number[]} [okCodes=[0]]
-	 * @returns {Promise<SpawnResult>}
-	 */
-	async #run(cmd, args, errorMsg, fs, okCodes = [0]) {
-		let content = ""
-		const onData = (chunk) => {
-			content += String(chunk)
-			const rows = content.split("\n").filter(Boolean)
-			const recent = rows.slice(-1)
-			if (recent.length) {
-				this.logger.cursorUp(1, true)
-				this.logger.info(recent[0])
-			}
-		}
-
-		let cwd = fs.absolute()
-		if ("/" === cwd && "." === fs.cwd) cwd = fs.cwd
-		this.logger.debug(`% ${cmd} ${args.join(" ")} (${cwd})`)
-		const response = await runSpawn(cmd, args, { onData, cwd })
-
-		if (!okCodes.includes(response.code)) {
-			this.logger.error(errorMsg)
-			process.exit(1)
-		}
-
-		this.logger.debug(response.text)
-		return response
 	}
 }
