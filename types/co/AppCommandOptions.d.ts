@@ -1,5 +1,4 @@
-export default AppCommandOptions;
-declare class AppCommandOptions {
+export default class AppCommandOptions {
     /**
      * @param {Object} input
      */

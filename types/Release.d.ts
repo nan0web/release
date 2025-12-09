@@ -1,34 +1,3 @@
-export default Release;
-export type ReleaseConfig = {
-    /**
-     * - Release version
-     */
-    version?: string | undefined;
-    /**
-     * -
-     */
-    createdAt?: string | number | Date | undefined;
-    /**
-     * -
-     */
-    startAt?: string | number | Date | undefined;
-    /**
-     * -
-     */
-    planAt?: string | number | Date | undefined;
-    /**
-     * -
-     */
-    completeAt?: string | number | Date | undefined;
-    /**
-     * -
-     */
-    document?: string | ReleaseDocument | undefined;
-    /**
-     * - Task map with test functions
-     */
-    tasks?: Map<string, Function> | undefined;
-};
 /**
  * @typedef {Object} ReleaseConfig
  * @property {string} [version] - Release version
@@ -42,7 +11,7 @@ export type ReleaseConfig = {
 /**
  * Release management class that coordinates task validation and release execution
  */
-declare class Release {
+export default class Release {
     /**
      * Creates a Release instance
      * @param {ReleaseConfig} config - Release configuration
@@ -85,5 +54,35 @@ declare class Release {
      */
     getProgress(): Promise<any>;
 }
+export type ReleaseConfig = {
+    /**
+     * - Release version
+     */
+    version?: string | undefined;
+    /**
+     * -
+     */
+    createdAt?: string | number | Date | undefined;
+    /**
+     * -
+     */
+    startAt?: string | number | Date | undefined;
+    /**
+     * -
+     */
+    planAt?: string | number | Date | undefined;
+    /**
+     * -
+     */
+    completeAt?: string | number | Date | undefined;
+    /**
+     * -
+     */
+    document?: string | ReleaseDocument | undefined;
+    /**
+     * - Task map with test functions
+     */
+    tasks?: Map<string, Function> | undefined;
+};
 import ReleaseDocument from "./Release/Document.js";
 import Logger from '@nan0web/log';

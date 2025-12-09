@@ -1,4 +1,4 @@
-export class PublishBody {
+export class PublisBody {
     static major: {
         help: string;
         defaultValue: boolean;
@@ -23,15 +23,13 @@ export class PublishBody {
     /** @type {boolean} */
     patch: boolean;
 }
-export default class PublishCommand extends Command {
-    static name: string;
-    static help: string;
-    static Body: typeof PublishBody;
-    /** @param {Partial<Command> & { body?: Partial<PublishBody> }} [input={}] */
-    constructor(input?: (Partial<Command> & {
-        body?: Partial<PublishBody> | undefined;
-    }) | undefined);
-    /** @type {PublishBody} */
-    body: PublishBody;
+export default class PublishMessage extends Message {
+    static Body: typeof PublisBody;
+    constructor(input?: {});
+    /** @type {PublisBody} */
+    body: PublisBody;
+    /** @returns {AsyncGenerator<OutputMessage>} */
+    run(): AsyncGenerator<OutputMessage>;
 }
-import Command from "./Command.js";
+import { Message } from "@nan0web/co";
+import { OutputMessage } from "@nan0web/co";

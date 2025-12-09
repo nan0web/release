@@ -2,9 +2,10 @@
 /**
  * CLI application for release management
  */
-export default class ReleaseCLI extends Command {
+export default class ReleaseCLI {
     static Message: typeof AppCommandMessage;
-    constructor();
+    /** @type {Logger} */
+    logger: Logger;
     /** @type {DB?} */
     db: DB | null;
     /** @type {FS} */
@@ -26,7 +27,7 @@ export default class ReleaseCLI extends Command {
     run(argv: string[]): Promise<void>;
     loadReleaseFiles(): Promise<void>;
 }
-import { Command } from '@nan0web/co';
+import Logger from '@nan0web/log';
 import DB from "./db/ReleaseDB.js";
 import FS from "@nan0web/db-fs";
 import Release from './Release.js';

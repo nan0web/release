@@ -1,4 +1,4 @@
-class AppCommandOptions {
+export default class AppCommandOptions {
 	/** @type {boolean} */
 	webui = false
 	/** @type {boolean} */
@@ -15,7 +15,7 @@ class AppCommandOptions {
 	ignoreFailTests = false
 	/** @type {boolean} */
 	full = false
-	
+
 	/**
 	 * @param {Object} input
 	 */
@@ -23,5 +23,3 @@ class AppCommandOptions {
 		Object.assign(this, input)
 	}
 }
-
-export default AppCommandOptions

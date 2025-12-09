@@ -1,56 +1,52 @@
-import { Command, CommandMessage } from "@nan0web/co"
-import FS from "@nan0web/db-fs"
-import BaseCommand from "./BaseCommand.js"
-
-/** @typedef {import("@nan0web/test/types/exec/runSpawn").SpawnResult} SpawnResult */
-
 /**
- * @extends {CommandMessage}
+ * DepsCommand – Message‑based version of the old `DepsCommand`.
+ *
+ * Checks and optionally fixes workspace / link dependencies.
+ *
+ * Body schema:
+ *   fix – boolean – whether to apply fixes (default: false)
+ *
+ * @module release/commands/DepsCommand
  */
-export class DepsCommandMessage extends CommandMessage {
+
+import { Message, OutputMessage } from "@nan0web/co"
+
+import Command from "./Command.js"
+
+export class DepsBody {
+	/** @type {boolean} */
+	fix = false
+	static fix = {
+		help: "Apply fixes automatically",
+		defaultValue: false,
+	}
+	constructor(input = {}) {
+		const {
+			fix = this.fix
+		} = Message.parseBody(input, DepsBody)
+		this.fix = Boolean(fix)
+	}
 }
 
-/**
- * @extends {BaseCommand}
- */
-export default class PublishCommand extends BaseCommand {
-	static Message = DepsCommandMessage
+export default class DepsCommand extends Command {
+	static name = "deps"
+	static help = "Dependencies manager"
+	static Body = DepsBody
+	/** @type {DepsBody} */
+	body
 
+	/** @param {Partial<DepsBody>} [input={}] */
 	constructor(input = {}) {
-		super({
-			name: "deps",
-			help: "Check dependencies to avoid publishing workspace:*, link:..",
-			...input
-		})
-		this.addArgument("*", String, "", "Fix command")
+		super({})
+		this.body = Command.parseBody(input, DepsBody)
 	}
 
 	/**
-	 * @docs
-	 * # `nan0release publish`
-	 *
-	 * Publishes current package to NPM and creates Git tags.
-	 *
-	 * Steps performed:
-	 * - Verifies no uncommitted changes
-	 * - Pulls latest changes
-	 * - Runs build and test scripts
-	 * - Creates Git tag if not exists
-	 * - Publishes to NPM registry
-	 * - Pushes changes and tags
-	 *
-	 * ```bash
-	 * nan0release publish
-	 * ```
-	 * @param {DepsCommandMessage} msg
+	 * @param {DepsCommand} [msg]
+	 * @returns {AsyncGenerator<OutputMessage>}
 	 */
-	async run(msg) {
-		const fs = new FS()
-		await fs.connect()
-
-		const category = ["fix"].find(c => msg.args.includes(c))
-
-		const pkg = await fs.loadDocument('package.json', {})
+	async * run(msg = new DepsCommand()) {
+		const pkg = await this.fs.loadDocument("package.json", {})
 		const deps = {
 			devDependencies: pkg?.devDependencies ?? {},
 			dependencies: pkg?.dependencies ?? {},
@@ -59,65 +55,67 @@ export default class PublishCommand extends BaseCommand {
 		const fixes = new Map()
 		const fails = new Set()
 
-		const isLocal = ver =>
-			["workspace:", "link:"].some(p => String(ver).toLowerCase().startsWith(p))
+		const isLocal = (ver) => ["workspace:", "link:"].some(p => String(ver).toLowerCase().startsWith(p))
 
 		const changes = new Map()
 
 		for (const [group, map] of Object.entries(deps)) {
-			this.logger.info(`${group} (${Object.keys(map).length} items)`)
+			yield new OutputMessage(`${group} (${Object.keys(map).length} items)`)
 			for (const [dep, ver] of Object.entries(map ?? {})) {
-				let msg = `${dep}: ${ver}`
 				if (isLocal(ver)) {
-					this.logger.info("")
-					const result = await this._run('npm', ['info', dep, '--json'], 'Unable to retrieve npm info', fs)
-					this.logger.cursorUp(1, true)
+					const result = await this._run("npm", ["info", dep, "--json"], "Cannot retrieve npm package info")
 					try {
-						if (result.text.startsWith("{")) {
-							const data = JSON.parse(result.text)
-							if (data.version) {
-								fixes.set(dep, data.version)
-								msg += ` → ${data.version}`
-							} else {
-								fails.add(dep)
-								msg += " 404 — not found"
-							}
+						const data = JSON.parse(result.text)
+						if (data.version) {
+							fixes.set(dep, data.version)
+							yield new OutputMessage({
+								content: [`  ${dep}: ${ver} → ${data.version}`],
+								type: OutputMessage.TYPES.WARNING,
+							})
 						} else {
-							throw new Error("Incorrect response format (not a JSON object)")
+							fails.add(dep)
+							yield new OutputMessage({
+								content: [`  ${dep}: 404 — not found`],
+								type: OutputMessage.TYPES.ERROR,
+							})
 						}
 					} catch (/** @type {any} */ err) {
-						this.logger.error(err.message)
-						this.logger.debug(err.stack)
-						this.logger.debug(JSON.stringify(result))
-					}
-					if ("fix" === category && fixes.has(dep)) {
-						pkg[group][dep] = fixes.get(dep)
-						changes.set(dep, `${group}:${pkg[group][dep]}`)
-						this.logger.success(msg)
-					} else {
-						this.logger.warn(msg)
+						yield new OutputMessage(err)
 					}
 				} else {
-					this.logger.success(msg)
+					yield new OutputMessage({
+						content: [`  ${dep}: ${ver}`],
+						type: OutputMessage.TYPES.SUCCESS
+					})
 				}
 			}
 		}
 
 		if (fails.size) {
-			this.logger.error(["Some dependencies are not yet published on npm", [...fails].join(", ")].join(": "))
+			yield new OutputMessage(new Error(`Some dependencies are not yet published on npm: ${[...fails].join(", ")}`))
 			return
 		}
 
-		if (fixes.size && category !== "fix") {
-			this.logger.info(
-				[
-					"You can fix the package.json automatically by using",
-					"nan0release deps fix"
-				].join(": "))
-		}
-		if (category === "fix") {
-			await fs.saveDocument("package.json", pkg)
-			this.logger.success(`Fixes saved in package.json (${changes.size} changes)`)
+		if (msg.body.fix && fixes.size) {
+			for (const [dep, ver] of fixes) {
+				// naive fix – replace in package.json
+				if (pkg.devDependencies?.[dep]) pkg.devDependencies[dep] = ver
+				if (pkg.dependencies?.[dep]) pkg.dependencies[dep] = ver
+				changes.set(dep, `${dep}: ${ver}`)
+				yield new OutputMessage({
+					content: [`Fixed ${dep} → ${ver}`],
+					type: OutputMessage.TYPES.SUCCESS,
+				})
+			}
+			await this.fs.saveDocument("package.json", pkg)
+			yield new OutputMessage({
+				content: [`Fixes saved (${changes.size} changes)`],
+				type: OutputMessage.TYPES.SUCCESS,
+			})
+			yield new OutputMessage({ content: ["Dependencies fixed"] })
+		} else {
+			yield new OutputMessage(`Run with --fix to apply ${fixes.size} available fixes`)
+			yield new OutputMessage({ content: ["Dependencies check completed"] })
 		}
 	}
 }

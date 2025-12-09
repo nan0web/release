@@ -1,114 +1,97 @@
-import { Command, CommandMessage } from "@nan0web/co"
-import FS from "@nan0web/db-fs"
-import BaseCommand from "./BaseCommand.js"
+/**
+ * PublishCommand – Message‑based version of the old `PublishCommand`.
+ *
+ * Publishes the current package to NPM and creates a Git tag.
+ *
+ * Body schema:
+ *   major | minor | patch – optional version bump flag.
+ *
+ * @module release/commands/PublishCommand
+ */
 
-/** @typedef {import("@nan0web/test/types/exec/runSpawn").SpawnResult} SpawnResult */
+import { Message, OutputMessage } from "@nan0web/co"
 
-export class PublishCommandOptions {
-	/** @type {string} */
-	tag
-	constructor(input = {}) {
-		const {
-			tag = ""
-		} = input
-		this.tag = String(tag)
-	}
-	/**
-	 * @param {any} input
-	 * @returns {PublishCommandOptions}
-	 */
-	static from(input) {
-		if (input instanceof PublishCommandOptions) return input
-		return new PublishCommandOptions(input)
+import Command from "./Command.js"
+
+export class PublishBody {
+	static major = { help: "Bump major version", defaultValue: false }
+	static minor = { help: "Bump minor version", defaultValue: false }
+	static patch = { help: "Bump patch version", defaultValue: false }
+
+	/** @type {boolean} */
+	major = false
+	/** @type {boolean} */
+	minor = false
+	/** @type {boolean} */
+	patch = false
+
+	constructor({ major = false, minor = false, patch = false } = {}) {
+		this.major = Boolean(major)
+		this.minor = Boolean(minor)
+		this.patch = Boolean(patch)
 	}
 }
 
-/**
- * @extends {CommandMessage}
- */
-export class PublishCommandMessage extends CommandMessage {
-	/** @returns {PublishCommandOptions} */
-	get opts() {
-		const opts = super.opts
-		return PublishCommandOptions.from(opts)
-	}
-	set opts(value) {
-		super.opts = value
-	}
+export default class PublishCommand extends Command {
+	static name = "publish"
+	static help = "Publish npm packages"
+	static Body = PublishBody
+
+	/** @type {PublishBody} */
+	body
+
+	/** @param {Partial<Command> & { body?: Partial<PublishBody> }} [input={}] */
 	constructor(input = {}) {
 		super(input)
-	}
-}
-
-/**
- * @extends {BaseCommand}
- */
-export default class PublishCommand extends BaseCommand {
-	static Message = PublishCommandMessage
-
-	constructor(input = {}) {
-		super({
-			name: "publish",
-			help: "Publish package to NPM and create Git tag",
-			...input
-		})
-		this.addArgument("*", String, "", "Category of new version: major, minor, patch, or empty.")
+		const {
+			body = new PublishBody()
+		} = Message.parseBody(input, PublishBody)
+		this.body = new PublishBody(body)
 	}
 
-	/**
-	 * @docs
-	 * # `nan0release publish`
-	 *
-	 * Publishes current package to NPM and creates Git tags.
-	 *
-	 * Steps performed:
-	 * - Verifies no uncommitted changes
-	 * - Pulls latest changes
-	 * - Runs build and test scripts
-	 * - Creates Git tag if not exists
-	 * - Publishes to NPM registry
-	 * - Pushes changes and tags
-	 *
-	 * ```bash
-	 * nan0release publish
-	 * ```
-	 * @param {PublishCommandMessage} msg
-	 */
-	async run(msg) {
-		const fs = new FS()
-		await fs.connect()
-
-		const category = ["major", "minor", "patch"].find(c => msg.args.includes(c))
-		if (category) {
-			await this._run('npm', ["version", category], "Unable to change version", fs)
+	/** @returns {AsyncGenerator<OutputMessage>} */
+	async * run() {
+		const bump = this.body.major ? "major" : this.body.minor ? "minor" : this.body.patch ? "patch" : null
+		if (bump) {
+			await this._run("npm", ["version", bump], "Failed to bump version")
 		}
-
-		const pkg = await fs.loadDocument('package.json', {})
+		const pkg = await this.fs.loadDocument("package.json", {})
 		const tag = `v${pkg.version}`
 
-		await this._run('git', ["diff", "--quiet"], 'Uncommitted changes found. Commit or stash first.', fs)
+		yield new OutputMessage(`🛜 nan0release: publishing @${pkg.name}@${pkg.version}`)
 
-		this.logger.info(`🛜 nan0release: publishing @${pkg.name}@${pkg.version}`)
+		await this._run("git", ["diff", "--quiet"], "Uncommitted changes found")
 
-		await this._run('git', ["pull"], 'Failed to pull latest changes', fs)
-		await this._run('npm', ["run", "clean"], 'Clean failed', fs)
-		await this._run('npm', ["run", "build"], 'Build failed', fs)
-		await this._run('npm', ["test"], 'Tests failed', fs)
+		await this._run("git", ["pull"], "Failed to pull latest changes")
+		await this._run("npm", ["run", "clean"], "Clean failed")
+		await this._run("npm", ["run", "build"], "Build failed")
+		await this._run("npm", ["test"], "Tests failed")
 
-		const tagsResult = await this._run('git', ["tag"], "Failed to get tags", fs)
-		const tags = tagsResult.text.split('\n').filter(Boolean)
+		return
+
+		const tagsResult = await this._run("git", ["tag"], "Failed to get tags")
+		const tags = tagsResult.text.split("\n").filter(Boolean)
 
 		if (!tags.includes(tag)) {
-			await this._run('git', ['tag', '-a', tag, '-m', `Release ${pkg.version}`], 'Tag creation failed', fs)
+			await this._run("git", ["tag", "-a", tag, "-m", `Release ${pkg.version}`], "Tag creation failed")
+			yield new OutputMessage({
+				content: [`Tag ${tag} created`],
+				type: OutputMessage.TYPES.SUCCESS,
+			})
 		} else {
-			this.logger.warn(`Tag ${tag} already exists`)
+			yield new OutputMessage({
+				content: [`Tag ${tag} already exists`],
+				type: OutputMessage.TYPES.WARNING
+			})
 		}
 
-		await this._run('npm', ['publish', '--access', 'public'], 'Publish to npm failed', fs)
+		await this._run("npm", ["publish", "--access", "public"], "Publish to npm failed")
+		await this._run("git", ["push", "origin", "main", "--no-verify"], "Git push failed")
+		await this._run("git", ["push", "origin", "--tags", "--no-verify"], "Tag push failed")
 
-		await this._run('git', ['push', 'origin', 'main', '--no-verify'], 'Git push failed', fs)
-		await this._run('git', ['push', 'origin', '--tags', '--no-verify'], 'Tag push failed', fs)
-
-		this.logger.success(`${pkg.name}@${pkg.version} published. Zero becomes script of a life 🌱`)
+		yield new OutputMessage({
+			content: [`${pkg.name}@${pkg.version} published.`],
+			type: OutputMessage.TYPES.SUCCESS,
+		})
 	}
 }

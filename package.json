@@ -13,12 +13,15 @@
 		"build": "tsc",
 		"clean": "rm -rf .cache/ && rm -rf dist/",
 		"clean:modules": "rm -rf node_modules",
-		"test": "node --test \"src/**/*.test.js\" | nan0test parse --fail",
+		"test": "node --test \"src/**/*.test.js\"",
+		"test1": "node --test \"src/**/*.test.js\" | nan0test parse --fail",
 		"test:docs": "node --test \"src/README.md.js\"",
 		"test:release": "node --test \"releases/**/*.test.js\"",
 		"test:coverage": "node --experimental-test-coverage --test-coverage-include=\"src/**/*.js\" --test-coverage-exclude=\"src/**/*.test.js\" --test \"src/**/*.test.js\"",
 		"test:coverage:collect": "nan0test coverage",
 		"test:status": "nan0test status",
+		"test:all": "npm run test && npm run test:docs && npm run test:play && npm run build",
+		"test:all1": "npm run test && npm run test:docs && npm run test:status && npm run test:play && npm run build",
 		"release": "node ./bin/nan0release.js publish",
 		"precommit": "npm test",
 		"prepush": "npm test",
@@ -27,17 +30,19 @@
 	},
 	"dependencies": {
 		"@nan0web/changelog": "^0.1.0",
-		"@nan0web/co": "^1.0.0",
-		"@nan0web/db": "^1.0.0",
+		"@nan0web/co": "2.0.0",
+		"@nan0web/db": "^1.1.2",
 		"@nan0web/db-fs": "^1.0.0",
-		"@nan0web/log": "^1.0.0",
-		"@nan0web/markdown": "^1.0.0",
-		"@nan0web/types": "^1.0.0",
+		"@nan0web/log": "1.1.0",
+		"@nan0web/markdown": "^1.0.2",
+		"@nan0web/types": "^1.2.0",
+		"@nan0web/ui": "1.1.0",
+		"@nan0web/ui-cli": "1.1.0",
 		"@nan0web/verse": "^1.0.0",
 		"supports-color": "^9.4.0"
 	},
 	"devDependencies": {
-		"@nan0web/test": "^1.0.2",
+		"@nan0web/test": "1.1.2",
 		"husky": "^9.1.7"
 	}
 }

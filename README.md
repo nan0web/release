@@ -1,8 +1,6 @@
 # @nan0web/release
 
-|Package name|[Status](https://github.com/nan0web/monorepo/blob/main/system.md#написання-сценаріїв)|Documentation|Test coverage|Features|Npm version|
-|---|---|---|---|---|---|
- |[@nan0web/release](https://github.com/nan0web/release/) |🟢 `97.1%` |🧪 [English 🏴󠁧󠁢󠁥󠁮󠁧󠁿](https://github.com/nan0web/release/blob/main/README.md)<br />[Українською 🇺🇦](https://github.com/nan0web/release/blob/main/docs/uk/README.md) |🟡 `84.2%` |✅ d.ts 📜 system.md 🕹️ playground |— |
+<!-- %PACKAGE_STATUS% -->
 
 Project management as code, Git-native, GPG-signed, and test-driven.
 
@@ -44,7 +42,7 @@ How to initialize a new release version?
 release init v1.0.0
 ```
 
-const cli = new ReleaseCLI()
+const cli = new ReleaseCLi()
 Show release details:
 
 How to show release information?
@@ -64,7 +62,7 @@ How to list all releases?
 release list [--json]
 ```
 
-const cli = new ReleaseCLI()
+const cli = new ReleaseCLi()
 Add a chat message to the current release:
 
 How to write a release chat message?
@@ -72,7 +70,7 @@ How to write a release chat message?
 release chat write --user alice "Issue with the build pipeline"
 ```
 
-const cli = new ReleaseCLI()
+const cli = new ReleaseCLi()
 Host a static server for viewing releases:
 
 How to host release UI?
@@ -80,7 +78,7 @@ How to host release UI?
 release host [--webui] [--port 3000]
 ```
 
-const cli = new ReleaseCLI()
+const cli = new ReleaseCLi()
 Serve all release files for local inspection:
 
 How to serve release static assets?
@@ -88,7 +86,7 @@ How to serve release static assets?
 release serve [--port 8080]
 ```
 
-const cli = new ReleaseCLI()
+const cli = new ReleaseCLi()
 Validate release tasks and integrity:
 
 How to validate release tasks?
@@ -107,7 +105,7 @@ How to seal a release?
 release seal [--message "All core APIs are stable and tested"]
 ```
 
-const cli = new ReleaseCLI()
+const cli = new ReleaseCLi()
 ## Core Concepts
 
 ### 1. Release as Object
@@ -128,7 +126,6 @@ const release = new Release({
 })
 console.info(release.version) // ← v1.0.0
 console.info(release.createdAt instanceof Date) // ← true
-
 ```
 ### 2. Release Document Parsing
 
@@ -141,19 +138,15 @@ How to parse release notes markdown into structured data?
 ```js
 import { ReleaseDocument } from '@nan0web/release'
 const md = `# v1.0.0 - 2025-08-20
-
 ## Overview
 Release milestone includes UI polish and core API stabilization.
-
 ### Tasks
 ### Done **Implement core UI design** [ui.core-design]
 ### InProgress **Fix responsive issues in mobile layout** [ui.mobile-fixes]`
-
 const doc = ReleaseDocument.from(md)
 console.info(doc.version) // ← v1.0.0
 console.info(doc.date instanceof Date) // ← true
 console.info(doc.document.children instanceof Array) // ← true
-
 ```
 ### 3. Person & Team Structures
 
@@ -172,7 +165,6 @@ const person = new Person({
 })
 console.info(person.name.firstName) // ← Alice
 console.info(person.contacts.length >= 0) // ← true
-
 ```
 ## Architecture: Project Management as Code
 
@@ -189,19 +181,15 @@ import { ProjectManagement } from '@nan0web/release'
 const pm = new ProjectManagement()
 pm.registerTask("task-1", "./tests/task1.test.js")
 pm.registerTask("task-2", "./tests/task2.test.js")
-
 const mockResults = {
 	passed: ["task-1"],
 	failed: [],
 	pending: ["task-2"]
 }
-
 pm.validateProjectState = async () => mockResults
 const results = await pm.validateProjectState()
-
 console.info(results.passed.includes("task-1")) // ← true
 console.info(results.pending.includes("task-2")) // ← true
-
 ```
 ### Release Processing
 
@@ -216,14 +204,11 @@ How to execute a release after validation?
 import { ReleaseManager, ProjectManagement } from '@nan0web/release'
 const pm = new ProjectManagement()
 const rm = new ReleaseManager(pm)
-
 rm.calculateVersion = () => "v1.0.1"
 rm.publish = async () => true
-
 const result = await rm.executeRelease("patch")
 console.info(result.version) // ← v1.0.1
 console.info(result.published) // ← true
-
 ```
 ### Changelog Integration
 
@@ -237,16 +222,13 @@ How to parse changelog and extract tasks?
 import { ChangelogTaskManager } from '@nan0web/release'
 const ctm = new ChangelogTaskManager()
 const changelog = `# Changelog
-
 ## [1.0.0] - 2025-08-20
 ### Added
 - Initial structure [core.init]
 - Release notes support [docs.release-notes]`
-
 const tasks = ctm.parseChangelog(changelog)
 console.info(Array.isArray(tasks)) // ← true
 console.info(tasks.length >= 0) // ← true
-
 ```
 ## Java•Script Features
 

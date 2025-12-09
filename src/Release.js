@@ -15,7 +15,7 @@ import Logger from '@nan0web/log'
 /**
  * Release management class that coordinates task validation and release execution
  */
-class Release {
+export default class Release {
 	/** @type {string} */
 	version
 	/** @type {Date} */
@@ -128,5 +128,3 @@ class Release {
 		}
 	}
 }
-
-export default Release

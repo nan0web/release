@@ -7,7 +7,7 @@ import {
 	DocsParser,
 	runSpawn,
 } from "@nan0web/test"
-import ReleaseCLI from "./ReleaseCLI.js"
+import ReleaseCLi from "./ui/cli/ReleaseCLi.js"
 import Release from "./Release.js"
 import ReleaseDocument from "./Release/Document.js"
 import Person from "./Release/Person.js"
@@ -106,8 +106,8 @@ function testRender() {
 		 * release init v1.0.0
 		 * ```
 		 */
-		const cli = new ReleaseCLI()
-		assert.ok(cli instanceof ReleaseCLI)
+		const cli = new ReleaseCLi()
+		assert.ok(cli instanceof ReleaseCLi)
 	})
 
 	/**
@@ -138,7 +138,7 @@ function testRender() {
 		 * release list [--json]
 		 * ```
 		 */
-		const cli = new ReleaseCLI()
+		const cli = new ReleaseCLi()
 		assert.ok(cli.releases)
 	})
 
@@ -152,8 +152,8 @@ function testRender() {
 		 * release chat write --user alice "Issue with the build pipeline"
 		 * ```
 		 */
-		const cli = new ReleaseCLI()
-		assert.ok(cli instanceof ReleaseCLI)
+		const cli = new ReleaseCLi()
+		assert.ok(cli instanceof ReleaseCLi)
 	})
 
 	/**
@@ -166,8 +166,8 @@ function testRender() {
 		 * release host [--webui] [--port 3000]
 		 * ```
 		 */
-		const cli = new ReleaseCLI()
-		assert.ok(cli instanceof ReleaseCLI)
+		const cli = new ReleaseCLi()
+		assert.ok(cli instanceof ReleaseCLi)
 	})
 
 	/**
@@ -180,8 +180,8 @@ function testRender() {
 		 * release serve [--port 8080]
 		 * ```
 		 */
-		const cli = new ReleaseCLI()
-		assert.ok(cli instanceof ReleaseCLI)
+		const cli = new ReleaseCLi()
+		assert.ok(cli instanceof ReleaseCLi)
 	})
 
 	/**
@@ -211,8 +211,8 @@ function testRender() {
 		 * release seal [--message "All core APIs are stable and tested"]
 		 * ```
 		 */
-		const cli = new ReleaseCLI()
-		assert.ok(cli instanceof ReleaseCLI)
+		const cli = new ReleaseCLi()
+		assert.ok(cli instanceof ReleaseCLi)
 	})
 
 	/**

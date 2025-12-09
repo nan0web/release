@@ -1,4 +1,4 @@
-export default class AppCommandMessage extends CommandMessage {
+export default class AppCommandMessage {
     /**
      * @param {*} input
      * @returns {AppCommandMessage}
@@ -8,5 +8,4 @@ export default class AppCommandMessage extends CommandMessage {
     /** @returns {AppCommandOptions} */
     get opts(): AppCommandOptions;
 }
-import { CommandMessage } from "@nan0web/co";
 import AppCommandOptions from "./AppCommandOptions.js";

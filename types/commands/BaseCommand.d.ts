@@ -2,7 +2,7 @@
 /**
  * @extends {Command}
  */
-export default class BaseCommand extends Command {
+export default class BaseCommand {
     /**
      * @param {string} cmd
      * @param {string[]} args
@@ -14,5 +14,4 @@ export default class BaseCommand extends Command {
     _run(cmd: string, args: string[], errorMsg: string, fs: FS, okCodes?: number[] | undefined): Promise<SpawnResult>;
 }
 export type SpawnResult = import("@nan0web/test/types/exec/runSpawn").SpawnResult;
-import { Command } from "@nan0web/co";
 import FS from "@nan0web/db-fs";
