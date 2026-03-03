@@ -1,4 +1,4 @@
-import { HumanName, HumanGender, HumanContact } from "@nan0web/verse"
+import { HumanName, HumanGender, HumanContact } from '@nan0web/verse'
 
 class Person {
 	/** @type {HumanName} */
@@ -7,7 +7,7 @@ class Person {
 	gender
 	/** @type {HumanContact[]} */
 	contacts
-	
+
 	constructor(name) {
 		this.name = new HumanName(name)
 		this.gender = new HumanGender(-1)
@@ -16,18 +16,18 @@ class Person {
 }
 
 class CLevelTeam {
-	static name = "C Level"
-	static ceo = new Person(["Yaroslav", "Wise"])
-	static cfo = new Person(["Chingis"])
+	static name = 'C Level'
+	static ceo = new Person(['Yaroslav', 'Wise'])
+	static cfo = new Person(['Chingis'])
 }
 
 class UXTeam {
-	static name = "UX"
-	static designer = new Person(["Taras", "Shevchenko"])
+	static name = 'UX'
+	static designer = new Person(['Taras', 'Shevchenko'])
 }
 
 class Company {
-	static name = "NaN•Web"
+	static name = 'NaN•Web'
 	static c = CLevelTeam
 	static ux = UXTeam
 }

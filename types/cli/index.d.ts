@@ -1,2 +1,2 @@
 export default createReleaseCLI;
-import createReleaseCLI from "../ui/cli/ReleaseCLi.js";
+import createReleaseCLI from '../ui/cli/ReleaseCLi.js';

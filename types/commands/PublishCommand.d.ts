@@ -1,4 +1,16 @@
-export class PublishBody {
+export default class PublishCommand extends Command {
+    static name: string;
+    static help: string;
+    static Body: typeof PublishBody;
+    /** @param {Partial<Command> & { body?: Partial<PublishBody> }} [input={}] */
+    constructor(input?: Partial<Command> & {
+        body?: Partial<PublishBody>;
+    });
+    /** @type {PublishBody} */
+    body: PublishBody;
+}
+import Command from './Command.js';
+declare class PublishBody {
     static major: {
         help: string;
         defaultValue: boolean;
@@ -23,15 +35,4 @@ export class PublishBody {
     /** @type {boolean} */
     patch: boolean;
 }
-export default class PublishCommand extends Command {
-    static name: string;
-    static help: string;
-    static Body: typeof PublishBody;
-    /** @param {Partial<Command> & { body?: Partial<PublishBody> }} [input={}] */
-    constructor(input?: (Partial<Command> & {
-        body?: Partial<PublishBody> | undefined;
-    }) | undefined);
-    /** @type {PublishBody} */
-    body: PublishBody;
-}
-import Command from "./Command.js";
+export {};

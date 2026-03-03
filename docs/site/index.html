@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="uk">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>@nan0web/release — Documentation Portal</title>
+		<!-- SSG dynamic loader for ui-lit will go here -->
+		<style>
+			:root {
+				--co: #0d6efd;
+				--ba-surface: #ffffff;
+				--co-text: #212529;
+				--co-muted: #6c757d;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--ba-surface: #0a0e14;
+					--co-text: #e8e8e8;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<nan0-layout-docs>
+			<nav slot="sidebar">
+				<ul>
+					<li><a href="pages/getting-started.md">Getting Started</a></li>
+					<li><a href="pages/api.md">API Reference</a></li>
+					<li><a href="pages/examples.md">Examples</a></li>
+					<li><a href="pages/economy.md">Economy & Themes</a></li>
+					<li><a href="pages/changelog.md">Changelog</a></li>
+				</ul>
+			</nav>
+			<main id="content">
+				<!-- Markdown content will be rendered here -->
+				<nan0-markdown src="../../README.md"></nan0-markdown>
+			</main>
+		</nan0-layout-docs>
+
+		<script type="module">
+			// Basic SSG Client-Side Prototype
+			import { render } from 'https://cdn.jsdelivr.net/npm/@nan0web/ui-lit@latest/dist/index.js'
+			console.log('Docs Site Initialized')
+		</script>
+	</body>
+</html>

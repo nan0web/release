@@ -78,9 +78,9 @@ export class ProjectManagement {
 	 */
 	async validateProjectState() {
 		const results = {
-			passed: /** @type {string[]} */([]),
-			failed: /** @type {string[]} */([]),
-			pending: /** @type {Array<{taskId: string, error: string}>} */([])
+			passed: /** @type {string[]} */ ([]),
+			failed: /** @type {string[]} */ ([]),
+			pending: /** @type {Array<{taskId: string, error: string}>} */ ([]),
 		}
 
 		for (const [taskId, testPath] of this.tasks.entries()) {
@@ -92,7 +92,7 @@ export class ProjectManagement {
 					results.failed.push(taskId)
 				}
 			} catch (error) {
-				results.pending.push({ taskId, error: /** @type {Error} */(error).message })
+				results.pending.push({ taskId, error: /** @type {Error} */ (error).message })
 			}
 		}
 
@@ -110,7 +110,7 @@ export class ProjectManagement {
 		return {
 			passed: true,
 			duration: 0,
-			assertions: 0
+			assertions: 0,
 		}
 	}
 
@@ -129,9 +129,9 @@ export class ProjectManagement {
 				total: this.tasks.size,
 				completed: projectState.passed.length,
 				failed: projectState.failed.length,
-				pending: projectState.pending.length
+				pending: projectState.pending.length,
 			},
-			ready: projectState.failed.length === 0
+			ready: projectState.failed.length === 0,
 		}
 	}
 }
@@ -171,7 +171,7 @@ export class ReleaseManager {
 		return {
 			version,
 			validation,
-			published: await this.publish(version, options)
+			published: await this.publish(version, options),
 		}
 	}
 

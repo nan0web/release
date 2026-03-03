@@ -1,10 +1,11 @@
-import ReleaseDocument from "./Release/Document.js"
+import ReleaseDocument from './Release/Document.js'
 import Logger from '@nan0web/log'
 
 /**
  * @typedef {Object} ReleaseConfig
  * @property {string} [version] - Release version
  * @property {string | number | Date | undefined} [createdAt] -
+ * @property {string | number | Date | undefined} [date] - Alias for createdAt
  * @property {string | number | Date | undefined} [startAt] -
  * @property {string | number | Date | undefined} [planAt] -
  * @property {string | number | Date | undefined} [completeAt] -
@@ -40,12 +41,12 @@ export default class Release {
 	constructor(config = {}) {
 		const {
 			version = '0.0.0',
-			createdAt = new Date(),
+			createdAt = config.date || new Date(),
 			startAt,
 			planAt,
 			completeAt,
 			document,
-			tasks = new Map()
+			tasks = new Map(),
 		} = config
 
 		this.version = String(version)
@@ -56,10 +57,18 @@ export default class Release {
 		this.document = ReleaseDocument.from(document)
 		this.tasks = tasks
 		this.logger = new Logger()
+
+		// Store additional config properties
+		for (const [key, value] of Object.entries(config)) {
+			if (!(key in this)) {
+				/** @ts-ignore */
+				this[key] = value
+			}
+		}
 	}
 
 	get path() {
-		return [...this.version.replace("v", "").split(".").slice(0, 2), this.version].join("/")
+		return [...this.version.replace('v', '').split('.').slice(0, 2), this.version].join('/')
 	}
 
 	/**
@@ -68,9 +77,9 @@ export default class Release {
 	 */
 	async validate() {
 		const results = {
-			passed: /** @type {Array} */([]),
-			failed: /** @type {Array<{taskId: any, error: string}>} */([]),
-			pending: /** @type {Array} */([])
+			passed: /** @type {Array} */ ([]),
+			failed: /** @type {Array<{taskId: any, error: string}>} */ ([]),
+			pending: /** @type {Array} */ ([]),
 		}
 
 		for (const [taskId, testFn] of this.tasks.entries()) {
@@ -78,7 +87,7 @@ export default class Release {
 				await testFn()
 				results.passed.push(taskId)
 			} catch (error) {
-				results.failed.push({ taskId, error: /** @type {Error} */(error).message })
+				results.failed.push({ taskId, error: /** @type {Error} */ (error).message })
 			}
 		}
 
@@ -124,7 +133,7 @@ export default class Release {
 			completed: completedTasks,
 			failed: failedTasks,
 			pending: pendingTasks,
-			progress: totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0
+			progress: totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0,
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { HumanName, HumanContact, HumanGender } from "@nan0web/verse"
+import { HumanName, HumanContact, HumanGender } from '@nan0web/verse'
 
 export default class Person {
 	/** @type {HumanName} */
@@ -8,14 +8,10 @@ export default class Person {
 	/** @type {HumanContact[]} */
 	contacts
 	constructor(input = {}) {
-		const {
-			name = new HumanName([]),
-			gender = new HumanGender(-1),
-			contacts = []
-		} = input
+		const { name = new HumanName([]), gender = new HumanGender(-1), contacts = [] } = input
 		this.name = HumanName.from(name)
 		this.gender = HumanGender.from(gender)
-		this.contacts = contacts.map(c => HumanContact.from(c))
+		this.contacts = contacts.map((c) => HumanContact.from(c))
 	}
 	/**
 	 * @param {*} input
@@ -26,4 +22,3 @@ export default class Person {
 		return new Person(input)
 	}
 }
-

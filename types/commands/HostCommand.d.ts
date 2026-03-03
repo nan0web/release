@@ -6,11 +6,11 @@
  *   release host [--port <number>] [--webui]
  */
 export default class HostCommand extends SubCommand {
-    /**
-     * Run the host server.
-     *
-     * @param {Object} ctx – command context
-     */
-    run(ctx: any): Promise<void>;
+	/**
+	 * Run the host server.
+	 *
+	 * @param {Object} ctx – command context
+	 */
+	run(ctx: any): Promise<void>
 }
-import SubCommand from "./SubCommand.js";
+import SubCommand from './SubCommand.js'

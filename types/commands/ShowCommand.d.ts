@@ -9,11 +9,11 @@
  *   --full – dump the whole release.md file
  */
 export default class ShowCommand extends SubCommand {
-    /**
-     * Render the release information.
-     *
-     * @param {Object} ctx – command context
-     */
-    run(ctx: any): Promise<void>;
+	/**
+	 * Render the release information.
+	 *
+	 * @param {Object} ctx – command context
+	 */
+	run(ctx: any): Promise<void>
 }
-import SubCommand from "./SubCommand.js";
+import SubCommand from './SubCommand.js'

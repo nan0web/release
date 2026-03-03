@@ -11,11 +11,11 @@
  *   --message – optional retro‑reflection text
  */
 export default class SealCommand extends SubCommand {
-    /**
-     * Seal the current release.
-     *
-     * @param {Object} ctx – command context
-     */
-    run(ctx: any): Promise<void>;
+	/**
+	 * Seal the current release.
+	 *
+	 * @param {Object} ctx – command context
+	 */
+	run(ctx: any): Promise<void>
 }
-import SubCommand from "./SubCommand.js";
+import SubCommand from './SubCommand.js'

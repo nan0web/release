@@ -10,12 +10,12 @@
  *   --json – output JSON instead of a human‑readable list
  */
 export default class ListCommand extends SubCommand {
-    /**
-     * Execute the command.
-     *
-     * @param {Object} ctx – command context (contains parsed args)
-     * @returns {Promise<void>}
-     */
-    run(ctx: any): Promise<void>;
+	/**
+	 * Execute the command.
+	 *
+	 * @param {Object} ctx – command context (contains parsed args)
+	 * @returns {Promise<void>}
+	 */
+	run(ctx: any): Promise<void>
 }
-import SubCommand from "./SubCommand.js";
+import SubCommand from './SubCommand.js'

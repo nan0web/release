@@ -2,7 +2,7 @@ import { describe, it } from "node:test"
 import { strict as assert } from "node:assert"
 
 import Person from "./Person.js"
-import { Contact } from "@nan0web/contact"
+import { Contact } from "@nan0web/co"
 
 describe("Person Model", () => {
 	it("constructs with default empty values", () => {

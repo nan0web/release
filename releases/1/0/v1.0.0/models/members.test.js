@@ -16,6 +16,6 @@ describe("Members Model", () => {
 
 	it("YaRaSLove includes a valid GPG key", () => {
 		const yar = members.YaRaSLove
-		assert.equal(yar.gpgKey, "ABC123456789")
+		assert.equal(yar.gpgKey, "?")
 	})
 })

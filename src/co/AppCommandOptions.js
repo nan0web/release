@@ -6,11 +6,11 @@ export default class AppCommandOptions {
 	/** @type {boolean} */
 	quiet = false
 	/** @type {string} */
-	releaseDir = "./releases"
+	releaseDir = './releases'
 	/** @type {boolean} */
 	write = false
 	/** @type {string} */
-	user = "anonymous"
+	user = 'anonymous'
 	/** @type {boolean} */
 	ignoreFailTests = false
 	/** @type {boolean} */

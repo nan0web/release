@@ -9,14 +9,14 @@
  * @module release/commands/PublishCommand
  */
 
-import { Message, OutputMessage } from "@nan0web/co"
+import { Message, OutputMessage } from '@nan0web/co'
 
-import Command from "./Command.js"
+import Command from './Command.js'
 
-export class PublishBody {
-	static major = { help: "Bump major version", defaultValue: false }
-	static minor = { help: "Bump minor version", defaultValue: false }
-	static patch = { help: "Bump patch version", defaultValue: false }
+class PublishBody {
+	static major = { help: 'Bump major version', defaultValue: false }
+	static minor = { help: 'Bump minor version', defaultValue: false }
+	static patch = { help: 'Bump patch version', defaultValue: false }
 
 	/** @type {boolean} */
 	major = false
@@ -33,8 +33,8 @@ export class PublishBody {
 }
 
 export default class PublishCommand extends Command {
-	static name = "publish"
-	static help = "Publish npm packages"
+	static name = 'publish'
+	static help = 'Publish npm packages'
 	static Body = PublishBody
 
 	/** @type {PublishBody} */
@@ -43,37 +43,45 @@ export default class PublishCommand extends Command {
 	/** @param {Partial<Command> & { body?: Partial<PublishBody> }} [input={}] */
 	constructor(input = {}) {
 		super(input)
-		const {
-			body = new PublishBody()
-		} = Message.parseBody(input, PublishBody)
+		const { body = new PublishBody() } = Message.parseBody(input, PublishBody)
 		this.body = new PublishBody(body)
 	}
 
 	/** @returns {AsyncGenerator<OutputMessage>} */
-	async * run() {
-		const bump = this.body.major ? "major" : this.body.minor ? "minor" : this.body.patch ? "patch" : null
+	async *run() {
+		const bump = this.body.major
+			? 'major'
+			: this.body.minor
+				? 'minor'
+				: this.body.patch
+					? 'patch'
+					: null
 		if (bump) {
-			await this._run("npm", ["version", bump], "Failed to bump version")
+			await this._run('npm', ['version', bump], 'Failed to bump version')
 		}
-		const pkg = await this.fs.loadDocument("package.json", {})
+		const pkg = await this.fs.loadDocument('package.json', {})
 		const tag = `v${pkg.version}`
 
 		yield new OutputMessage(`🛜 nan0release: publishing @${pkg.name}@${pkg.version}`)
 
-		await this._run("git", ["diff", "--quiet"], "Uncommitted changes found")
+		await this._run('git', ['diff', '--quiet'], 'Uncommitted changes found')
 
-		await this._run("git", ["pull"], "Failed to pull latest changes")
-		await this._run("npm", ["run", "clean"], "Clean failed")
-		await this._run("npm", ["run", "build"], "Build failed")
-		await this._run("npm", ["test"], "Tests failed")
+		await this._run('git', ['pull'], 'Failed to pull latest changes')
+		await this._run('npm', ['run', 'clean'], 'Clean failed')
+		await this._run('npm', ['run', 'build'], 'Build failed')
+		await this._run('npm', ['test'], 'Tests failed')
 
 		return
 
-		const tagsResult = await this._run("git", ["tag"], "Failed to get tags")
-		const tags = tagsResult.text.split("\n").filter(Boolean)
+		const tagsResult = await this._run('git', ['tag'], 'Failed to get tags')
+		const tags = tagsResult.text.split('\n').filter(Boolean)
 
 		if (!tags.includes(tag)) {
-			await this._run("git", ["tag", "-a", tag, "-m", `Release ${pkg.version}`], "Tag creation failed")
+			await this._run(
+				'git',
+				['tag', '-a', tag, '-m', `Release ${pkg.version}`],
+				'Tag creation failed',
+			)
 			yield new OutputMessage({
 				content: [`Tag ${tag} created`],
 				type: OutputMessage.TYPES.SUCCESS,
@@ -81,13 +89,13 @@ export default class PublishCommand extends Command {
 		} else {
 			yield new OutputMessage({
 				content: [`Tag ${tag} already exists`],
-				type: OutputMessage.TYPES.WARNING
+				type: OutputMessage.TYPES.WARNING,
 			})
 		}
 
-		await this._run("npm", ["publish", "--access", "public"], "Publish to npm failed")
-		await this._run("git", ["push", "origin", "main", "--no-verify"], "Git push failed")
-		await this._run("git", ["push", "origin", "--tags", "--no-verify"], "Tag push failed")
+		await this._run('npm', ['publish', '--access', 'public'], 'Publish to npm failed')
+		await this._run('git', ['push', 'origin', 'main', '--no-verify'], 'Git push failed')
+		await this._run('git', ['push', 'origin', '--tags', '--no-verify'], 'Tag push failed')
 
 		yield new OutputMessage({
 			content: [`${pkg.name}@${pkg.version} published.`],

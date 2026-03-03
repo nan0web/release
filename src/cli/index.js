@@ -4,6 +4,6 @@
  * @module release/cli
  */
 
-import createReleaseCLI from "../ui/cli/ReleaseCLi.js"
+import createReleaseCLI from '../ui/cli/ReleaseCLi.js'
 
 export default createReleaseCLI

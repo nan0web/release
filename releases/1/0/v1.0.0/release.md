@@ -26,6 +26,7 @@ Project management as a code is real if you believe and do this way.
 
 - MUST verify that `git status` does not show any `releases/0/0/v0.0.0/*` files;
 - MUST create all required files according to the structure:
+
 ```text
 release.md                      ← Release notes (tasks, sections)
 release.js                      ← Team, roles, config (class Release)
@@ -48,16 +49,19 @@ assets/                         ← Designs, docs, deliverables
 retro.md                        ← Final reflection (sealed)
 .cache/                         ← gitignored: read state, session
 ```
+
 - MUST confirm with `git status` which files are ignored and which are tracked.
 
 ---
 
 ### 2. Test-Driven Project Progress [](./test/YaRaSLove/test-driven.test.js)
+
 - Tasks become testable units → Pass/fail defines completion.
 - Automates status tracking via CI/CD: "Done" = test passes.
 - Enables **automated QA gates in releases** — powerful for regulated environments.
 
 #### Acceptance Criteria
+
 - MUST write `release.md` inside the test folder `releases/0/0/v0.0.0/release.md` using proper formatting;
 - MUST initialize the release with `nan0release init v0.0.0`;
 - MUST check the generated tests and compare them against expected templates;
@@ -69,16 +73,19 @@ retro.md                        ← Final reflection (sealed)
 - MUST execute `nan0release seal v0.0.0`
 
 ### 3. Transparent & Predictable Progress Tracking [](./test/YaRaSLove/progress-tracking.test.js)
+
 - Real-time progress %, ETA, and velocity derived from commit history.
 - Immediate visibility through stats (pending/pass/fail).
 - Eliminates manual updates in Jira/Trello → reduces noise and inaccuracies.
 
 #### Acceptance Criteria
+
 - MUST validate updates occur upon commits (these may be simulated or run within an isolated temporary `.git` environment); ensure CI/CD generates reports which are both testable and consumable by UIs.
 
 ---
 
 ### 4. Integrated Team Communication [](./test/YaRaSLove/chat.test.js)
+
 - Structured chat per release and task embedded directly in file system.
 - Chronologically ordered, searchable, and version-controlled conversations.
 - `.cache` supports user-specific read/unread states without requiring a central server.
@@ -109,6 +116,7 @@ retro.md                        ← Final reflection (sealed)
 ---
 
 ### 6. Extensible & Composable & Office-First & Decentralized by Design [ci-cd.test.js]
+
 - Assets such as designs, configurations, and logs stored within the release for full context.
 - Supports custom scripts, hooks, templates (e.g., `pre-release.js`, `post-release.sh`).
 - Seamlessly integrates into CI/CD pipelines.
@@ -118,4 +126,3 @@ retro.md                        ← Final reflection (sealed)
 #### Acceptance Criteria
 
 - MUST confirm context preservation by adding test files to assets and validating output of `git status`.
-

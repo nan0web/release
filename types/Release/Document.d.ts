@@ -27,5 +27,5 @@ declare class ReleaseDocument extends Markdown {
     /** @type {Date | undefined} */
     date: Date | undefined;
 }
-import Markdown from "@nan0web/markdown";
-import Person from "./Person.js";
+import Markdown from '@nan0web/markdown';
+import Person from './Person.js';

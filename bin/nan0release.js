@@ -1,24 +1,20 @@
 #!/usr/bin/env node
 
-import process from "node:process"
+import process from 'node:process'
 
-import DBFS from "@nan0web/db-fs"
-import { OutputMessage } from "@nan0web/co"
+import { OutputMessage } from '@nan0web/co'
 import Logger from '@nan0web/log'
 
-import createReleaseCLI from "../src/ui/cli/ReleaseCLi.js"
-import Command from "../src/commands/Command.js"
+import createReleaseCLI from '../src/ui/cli/ReleaseCLi.js'
 
 class OutputLogger extends Logger {
 	log(first, ...args) {
 		if (first && first instanceof OutputMessage) {
 			if (OutputMessage.TYPES.ERROR === first.type) {
 				return this.error(first.content, ...args)
-			}
-			else if (OutputMessage.TYPES.WARNING === first.type) {
+			} else if (OutputMessage.TYPES.WARNING === first.type) {
 				return this.warn(first.content, ...args)
-			}
-			else if (OutputMessage.TYPES.SUCCESS === first.type) {
+			} else if (OutputMessage.TYPES.SUCCESS === first.type) {
 				return this.success(first.content, ...args)
 			}
 			return this.info(first.content, ...args)
@@ -35,17 +31,12 @@ async function main(argv = []) {
 
 	const stream = cli.run()
 	for await (const entry of stream) {
-		// /** @type {Command} */
-		// const msg = entry.body.msg
-		// for await (const out of msg.run()) {
-		// 	logger.log(out)
-		// }
-		logger.log(entry)
+		logger.info(entry)
 	}
 }
 
-main(process.argv.slice(2)).catch(err => {
-	logger.error("❌ Unhandled error:", err.message || err)
+main(process.argv.slice(2)).catch((err) => {
+	logger.error('❌ Unhandled error:', err.message || err)
 	if (err.stack) logger.debug(err.stack)
 	process.exit(1)
 })

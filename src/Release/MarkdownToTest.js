@@ -11,22 +11,22 @@ class MarkdownToTest {
 	generateTests(markdown) {
 		const lines = markdown.split('\n')
 		const versionMatch = markdown.match(/^#\s+(v[\d.]+)\s*-\s*(\d{4}-\d{2}-\d{2})/)
-		
+
 		if (!versionMatch) {
 			throw new Error('Markdown must start with version header: # vX.Y.Z - YYYY-MM-DD')
 		}
-		
+
 		const [, version, date] = versionMatch
 		let testCode = this.generateImports()
 		testCode += this.generateDescribeHeader(version, date)
-		
+
 		const sections = this.extractSections(lines)
 		testCode += this.generateSectionTests(sections)
-		
+
 		testCode += '})\n'
 		return testCode
 	}
-	
+
 	/**
 	 * Generate import statements for node:test
 	 * @returns {string} Import code
@@ -37,7 +37,7 @@ import { ok, strictEqual } from "node:assert"
 
 `
 	}
-	
+
 	/**
 	 * Generate main describe block header
 	 * @param {string} version - Release version
@@ -48,7 +48,7 @@ import { ok, strictEqual } from "node:assert"
 		return `describe("${version} - ${date}", () => {
 `
 	}
-	
+
 	/**
 	 * Extract sections from markdown lines
 	 * @param {string[]} lines - Markdown lines
@@ -59,20 +59,20 @@ import { ok, strictEqual } from "node:assert"
 		const sections = []
 		/** @type {{title: string, tasks: Array<{content: string, status: string, slug: string}>} | null} */
 		let currentSection = null
-		
+
 		for (let i = 0; i < lines.length; i++) {
 			const line = lines[i]
-			
+
 			// H2 section
 			if (line.startsWith('## ')) {
 				currentSection = {
 					title: line.slice(3).trim(),
-					tasks: /** @type {Array<{content: string, status: string, slug: string}>} */([])
+					tasks: /** @type {Array<{content: string, status: string, slug: string}>} */ ([]),
 				}
 				sections.push(currentSection)
 				continue
 			}
-			
+
 			// H3 task
 			if (line.startsWith('###') && currentSection) {
 				const statusMatch = line.match(/^###( Draft| InProgress)? \*\*(.+)\*\* \[(.+)\]$/)
@@ -81,16 +81,16 @@ import { ok, strictEqual } from "node:assert"
 					currentSection.tasks.push({
 						content,
 						status: status ? status.trim() : 'Done',
-						slug
+						slug,
 					})
 				}
 				continue
 			}
 		}
-		
+
 		return sections
 	}
-	
+
 	/**
 	 * Generate test code for sections and their tasks
 	 * @param {Array<{title: string, tasks: Array}>} sections - Sections with tasks
@@ -98,38 +98,40 @@ import { ok, strictEqual } from "node:assert"
 	 */
 	generateSectionTests(sections) {
 		let code = ''
-		
-		sections.forEach(section => {
+
+		sections.forEach((section) => {
 			code += `	describe("${section.title}", () => {
 `
-			
-			section.tasks.forEach(/** @param {{status: string, content: string}} task */task => {
-				switch (task.status) {
-					case 'Draft':
-						code += `		it.todo("${task.content}", () => {
+
+			section.tasks.forEach(
+				/** @param {{status: string, content: string}} task */ (task) => {
+					switch (task.status) {
+						case 'Draft':
+							code += `		it.todo("${task.content}", () => {
 			ok(false, "Draft task - not yet implemented")
 		})
 `
-						break
-					case 'InProgress':
-						code += `		it.skip("${task.content}", () => {
+							break
+						case 'InProgress':
+							code += `		it.skip("${task.content}", () => {
 			ok(false, "In progress task - not yet completed")
 		})
 `
-						break
-					default: // Done
-						code += `		it("${task.content}", () => {
+							break
+						default: // Done
+							code += `		it("${task.content}", () => {
 			ok(true, "Task completed successfully")
 		})
 `
-						break
-				}
-			})
-			
+							break
+					}
+				},
+			)
+
 			code += `	})
 `
 		})
-		
+
 		return code
 	}
 }

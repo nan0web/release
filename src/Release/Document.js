@@ -1,5 +1,5 @@
-import Markdown, { MDElement, MDHeading1, MDHeading2, MDHeading3 } from "@nan0web/markdown"
-import Person from "./Person.js"
+import Markdown, { MDElement, MDHeading1, MDHeading2, MDHeading3 } from '@nan0web/markdown'
+import Person from './Person.js'
 
 class ReleaseDocument extends Markdown {
 	/** @type {Person[]} */
@@ -20,15 +20,10 @@ class ReleaseDocument extends Markdown {
 	 */
 	constructor(options = {}) {
 		super()
-		const {
-			team = [],
-			roles = new Map(),
-			version = "",
-			date
-		} = options
+		const { team = [], roles = new Map(), version = '', date } = options
 		this.version = String(version)
 		this.date = date ? new Date(date) : undefined
-		this.team = team.map(t => Person.from(t))
+		this.team = team.map((t) => Person.from(t))
 		this.roles = new Map(roles)
 	}
 
@@ -43,13 +38,13 @@ class ReleaseDocument extends Markdown {
 
 		const h1s = this.document.filter((el) => el instanceof MDHeading1)
 		if (h1s.length !== 1) {
-			throw new TypeError("Release document must have exactly one H1 heading with version and date")
+			throw new TypeError('Release document must have exactly one H1 heading with version and date')
 		}
 
-		const h1Content = h1s[0].content ?? ""
-		const [versionPart, ...dateParts] = h1Content.split(" - ")
+		const h1Content = h1s[0].content ?? ''
+		const [versionPart, ...dateParts] = h1Content.split(' - ')
 		this.version = versionPart.trim()
-		this.date = new Date(dateParts.join(" - ").trim())
+		this.date = new Date(dateParts.join(' - ').trim())
 
 		const sections = []
 		/** @type {{title: string, tasks: Array} | null} */
@@ -58,11 +53,10 @@ class ReleaseDocument extends Markdown {
 			if (el instanceof MDHeading2) {
 				currentSection = {
 					title: el.content.trim(),
-					tasks: []
+					tasks: [],
 				}
 				sections.push(currentSection)
-			}
-			else if (el instanceof MDHeading3 && currentSection) {
+			} else if (el instanceof MDHeading3 && currentSection) {
 				const content = el.content.trim()
 				const statusMatch = content.match(/^(\w+)\s*(.+)$/)
 				const slugMatch = content.match(/\[([^\]]+)\]$/)
@@ -84,7 +78,7 @@ class ReleaseDocument extends Markdown {
 				currentSection.tasks.push({
 					content: taskContent,
 					status: status,
-					slug: slug
+					slug: slug,
 				})
 			}
 		}
@@ -98,7 +92,7 @@ class ReleaseDocument extends Markdown {
 	 */
 	static from(input) {
 		if (input instanceof ReleaseDocument) return input
-		if (typeof input === "string") {
+		if (typeof input === 'string') {
 			const doc = new ReleaseDocument()
 			doc.parse(input)
 			return doc

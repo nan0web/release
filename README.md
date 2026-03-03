@@ -42,7 +42,7 @@ How to initialize a new release version?
 release init v1.0.0
 ```
 
-const cli = new ReleaseCLi()
+const cli = ReleaseCLi()
 Show release details:
 
 How to show release information?
@@ -51,8 +51,8 @@ release show [--full]
 ```
 
 const release = new Release({
-version: "v1.0.0",
-createdAt: new Date("2025-08-20")
+version: 'v1.0.0',
+createdAt: new Date('2025-08-20'),
 })
 console.info(release.version) // v1.0.0
 List all releases in the project:
@@ -62,7 +62,7 @@ How to list all releases?
 release list [--json]
 ```
 
-const cli = new ReleaseCLi()
+const cli = ReleaseCLi()
 Add a chat message to the current release:
 
 How to write a release chat message?
@@ -70,7 +70,7 @@ How to write a release chat message?
 release chat write --user alice "Issue with the build pipeline"
 ```
 
-const cli = new ReleaseCLi()
+const cli = ReleaseCLi()
 Host a static server for viewing releases:
 
 How to host release UI?
@@ -78,7 +78,7 @@ How to host release UI?
 release host [--webui] [--port 3000]
 ```
 
-const cli = new ReleaseCLi()
+const cli = ReleaseCLi()
 Serve all release files for local inspection:
 
 How to serve release static assets?
@@ -86,7 +86,7 @@ How to serve release static assets?
 release serve [--port 8080]
 ```
 
-const cli = new ReleaseCLi()
+const cli = ReleaseCLi()
 Validate release tasks and integrity:
 
 How to validate release tasks?
@@ -95,8 +95,8 @@ release validate [--ignore-fail]
 ```
 
 const release = new Release({
-version: "v1.0.0",
-createdAt: new Date("2025-08-20")
+version: 'v1.0.0',
+createdAt: new Date('2025-08-20'),
 })
 Seal the release with retro reflection:
 
@@ -105,7 +105,7 @@ How to seal a release?
 release seal [--message "All core APIs are stable and tested"]
 ```
 
-const cli = new ReleaseCLi()
+const cli = ReleaseCLi()
 ## Core Concepts
 
 ### 1. Release as Object
@@ -121,8 +121,8 @@ How to instantiate a Release?
 ```js
 import { Release } from '@nan0web/release'
 const release = new Release({
-	version: "v1.0.0",
-	createdAt: "2025-08-20T10:00:00Z"
+	version: 'v1.0.0',
+	createdAt: '2025-08-20T10:00:00Z',
 })
 console.info(release.version) // ← v1.0.0
 console.info(release.createdAt instanceof Date) // ← true
@@ -159,9 +159,9 @@ How to create a Person with typed properties?
 ```js
 import { Person } from '@nan0web/release'
 const person = new Person({
-	name: ["Alice", "Developer"],
-	gender: "female",
-	contacts: ["mailto:alice@example.com"]
+	name: ['Alice', 'Developer'],
+	gender: 'female',
+	contacts: ['mailto:alice@example.com'],
 })
 console.info(person.name.firstName) // ← Alice
 console.info(person.contacts.length >= 0) // ← true
@@ -179,17 +179,17 @@ How to register and validate tasks as tests?
 ```js
 import { ProjectManagement } from '@nan0web/release'
 const pm = new ProjectManagement()
-pm.registerTask("task-1", "./tests/task1.test.js")
-pm.registerTask("task-2", "./tests/task2.test.js")
+pm.registerTask('task-1', './tests/task1.test.js')
+pm.registerTask('task-2', './tests/task2.test.js')
 const mockResults = {
-	passed: ["task-1"],
+	passed: ['task-1'],
 	failed: [],
-	pending: ["task-2"]
+	pending: ['task-2'],
 }
 pm.validateProjectState = async () => mockResults
 const results = await pm.validateProjectState()
-console.info(results.passed.includes("task-1")) // ← true
-console.info(results.pending.includes("task-2")) // ← true
+console.info(results.passed.includes('task-1')) // ← true
+console.info(results.pending.includes('task-2')) // ← true
 ```
 ### Release Processing
 
@@ -204,9 +204,9 @@ How to execute a release after validation?
 import { ReleaseManager, ProjectManagement } from '@nan0web/release'
 const pm = new ProjectManagement()
 const rm = new ReleaseManager(pm)
-rm.calculateVersion = () => "v1.0.1"
+rm.calculateVersion = () => 'v1.0.1'
 rm.publish = async () => true
-const result = await rm.executeRelease("patch")
+const result = await rm.executeRelease('patch')
 console.info(result.version) // ← v1.0.1
 console.info(result.published) // ← true
 ```

@@ -220,12 +220,12 @@ GPG дає **криптографічне підтвердження** того,
 ```js
 // releases/1/0/v1.0.0.js
 class Members {
-	static UserName = new Person({
-		name: "UserName",
-		contacts: [new Contact("https://example.com")],
-		gpgKey: "DEF987654321", // новий ключ
-		revokedKey: "ABC123456789", // старий, втрачений ключ
-	});
+  static UserName = new Person({
+    name: 'UserName',
+    contacts: [new Contact('https://example.com')],
+    gpgKey: 'DEF987654321', // новий ключ
+    revokedKey: 'ABC123456789', // старий, втрачений ключ
+  })
 }
 ```
 
@@ -233,15 +233,15 @@ class Members {
 
 ```json
 {
-	"user": "ya.raslove",
-	"currentKey": "DEF987654321",
-	"revokedKeys": [
-		{
-			"key": "ABC123456789",
-			"revokedAt": "2025-08-20",
-			"proof": "/recovery/ya.raslove/rotation-2025-08-20.md"
-		}
-	]
+  "user": "ya.raslove",
+  "currentKey": "DEF987654321",
+  "revokedKeys": [
+    {
+      "key": "ABC123456789",
+      "revokedAt": "2025-08-20",
+      "proof": "/recovery/ya.raslove/rotation-2025-08-20.md"
+    }
+  ]
 }
 ```
 
@@ -257,20 +257,20 @@ class Members {
 
 ## 🛠 CLI Команди
 
-| Команда                                            | Опис                       |
-| -------------------------------------------------- | -------------------------- |
-| `nan0release`                                      | Показ статуса релізу       |
-| `nan0release v1.0.0`                               | Показ конкретного релізу   |
-| `nan0release ls`                                   | Список релізів              |
-| `nan0release todo`                                 | Список моїх завдань        |
-| `nan0release todo > todo.md`                       | Експорт завдань            |
-| `nan0release chat write "msg"`                     | Написати у загальний чат   |
-| `nan0release chat write ux.logo "help needed"`    | Написати у конкретний чат |
-| `nan0release validate`                             | Перевірити структуру, тести, GPG |
-| `nan0release serve`                                | Запустити локальний сервер |
-| `nan0release host --webui`                         | Хостити онлайн з автентифікацією |
-| `nan0release init v1.0.0`                          | Створити новий реліз       |
-| `nan0release seal v1.0.0`                          | Зробити реліз незмінним    |
+| Команда                                        | Опис                             |
+| ---------------------------------------------- | -------------------------------- |
+| `nan0release`                                  | Показ статуса релізу             |
+| `nan0release v1.0.0`                           | Показ конкретного релізу         |
+| `nan0release ls`                               | Список релізів                   |
+| `nan0release todo`                             | Список моїх завдань              |
+| `nan0release todo > todo.md`                   | Експорт завдань                  |
+| `nan0release chat write "msg"`                 | Написати у загальний чат         |
+| `nan0release chat write ux.logo "help needed"` | Написати у конкретний чат        |
+| `nan0release validate`                         | Перевірити структуру, тести, GPG |
+| `nan0release serve`                            | Запустити локальний сервер       |
+| `nan0release host --webui`                     | Хостити онлайн з автентифікацією |
+| `nan0release init v1.0.0`                      | Створити новий реліз             |
+| `nan0release seal v1.0.0`                      | Зробити реліз незмінним          |
 
 > Усі команди працюють з CI. Вивід через `--json`, `--quiet`.
 
@@ -278,13 +278,13 @@ class Members {
 
 ## 🧪 Життєвий цикл завдання
 
-| Стан               | Як реалізовано                          |
-| ------------------ | ---------------------------------------- |
-| `todo`             | Тест визначено через `it.todo()`         |
-| `in-progress`      | Тест написано, але не пройшов            |
-| `done`             | Тест пройдено, жодних ручних оновлень    |
-| `blocked`          | Залежить від іншого завдання/схвалення   |
-| `skipped`          | `it.skip()` — рідко використовується    |
+| Стан          | Як реалізовано                         |
+| ------------- | -------------------------------------- |
+| `todo`        | Тест визначено через `it.todo()`       |
+| `in-progress` | Тест написано, але не пройшов          |
+| `done`        | Тест пройдено, жодних ручних оновлень  |
+| `blocked`     | Залежить від іншого завдання/схвалення |
+| `skipped`     | `it.skip()` — рідко використовується   |
 
 Статус є **виводимий**, ніколи не написаний.
 
@@ -300,18 +300,18 @@ task/ux.logo/approved/ceo.json
 
 ```json
 {
-	"by": "UserName <email@example.com>",
-	"sign": "gpg:DEF987654321",
-	"time": "2025-08-20T12:00:00Z"
+  "by": "UserName <email@example.com>",
+  "sign": "gpg:DEF987654321",
+  "time": "2025-08-20T12:00:00Z"
 }
 ```
 
 Тестування:
 
 ```js
-it("CEO approved logo", () => {
-	expect(fileExists("task/ux.logo/approved/ceo.json")).toBe(true);
-});
+it('CEO approved logo', () => {
+  expect(fileExists('task/ux.logo/approved/ceo.json')).toBe(true)
+})
 ```
 
 Дозволяється кілька схвалень:
@@ -369,17 +369,17 @@ nan0release validate
 ```js
 // .nanorc.js
 export default {
-	git: {
-		user: "UserName",
-		email: "email@example.com",
-		signingKey: "ABC123456789",
-		gpgsign: true,
-	},
-	hooks: {
-		"on-release-done": "git tag v1.0.0",
-		"on-task-fail": "echo @pm: task failure",
-	},
-};
+  git: {
+    user: 'UserName',
+    email: 'email@example.com',
+    signingKey: 'ABC123456789',
+    gpgsign: true,
+  },
+  hooks: {
+    'on-release-done': 'git tag v1.0.0',
+    'on-task-fail': 'echo @pm: task failure',
+  },
+}
 ```
 
 Використовується:

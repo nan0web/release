@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import FS from "@nan0web/db-fs"
+import FS from '@nan0web/db-fs'
 import { existsSync, writeFileSync, unlinkSync, mkdirSync, readFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -16,11 +16,11 @@ const fs = new FS()
 
 describe('release.js', async () => {
 	await fs.connect()
-	const tempDir = "tmp/release"
+	const tempDir = 'tmp/release'
 	const db = fs.extract(tempDir)
-	await db.writeDocument("package.json", {
+	await db.writeDocument('package.json', {
 		name: 'test-package',
-		version: '0.0.1-test'
+		version: '0.0.1-test',
 	})
 
 	// Mock process.cwd to return tempDir
@@ -34,16 +34,19 @@ describe('release.js', async () => {
 	})
 
 	it('main function processes prepare command', async () => {
-		const resultP= await main(['prepare'])
+		const resultP = await main(['prepare'])
 		assert.ok(result.includes('Prepare completed'))
 	})
 
 	it('ReleaseCommand handles package.json validation', async () => {
 		// Create a package.json without required scripts
-		writeFileSync(tempPackageJson, JSON.stringify({
-			name: 'test-package',
-			version: '0.0.1-test'
-		}))
+		writeFileSync(
+			tempPackageJson,
+			JSON.stringify({
+				name: 'test-package',
+				version: '0.0.1-test',
+			}),
+		)
 
 		// Should exit with error when missing scripts
 		try {
@@ -54,7 +57,12 @@ describe('release.js', async () => {
 		}
 
 		// Should fix when --fix flag is used
-		const result = await main(['--ignore-uncommitted', '--ignore-fail-tests', '--ignore-tag', '--fix'])
+		const result = await main([
+			'--ignore-uncommitted',
+			'--ignore-fail-tests',
+			'--ignore-tag',
+			'--fix',
+		])
 		assert.ok(result.includes('Release completed'))
 
 		// Verify package.json was fixed
@@ -69,5 +77,5 @@ describe('release.js', async () => {
 
 	// Cleanup
 	process.cwd = originalCwd
-	await db.dropDocument("package.json")
+	await db.dropDocument('package.json')
 })

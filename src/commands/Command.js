@@ -1,8 +1,8 @@
-import DBFS from "@nan0web/db-fs"
-import { OutputMessage } from "@nan0web/co"
-import Logger from "@nan0web/log"
-import { runSpawn } from "@nan0web/test"
-import { UiMessage } from "@nan0web/ui"
+import DBFS from '@nan0web/db-fs'
+import { OutputMessage } from '@nan0web/co'
+import Logger from '@nan0web/log'
+import { runSpawn } from '@nan0web/test'
+import { UiMessage } from '@nan0web/ui'
 
 /** @typedef {import("@nan0web/test/types/exec/runSpawn").SpawnResult} SpawnResult */
 
@@ -17,10 +17,7 @@ export default class Command extends UiMessage {
 	 */
 	constructor(input = {}) {
 		super(input)
-		const {
-			fs,
-			logger,
-		} = UiMessage.parseBody(input, this.Body)
+		const { fs, logger } = UiMessage.parseBody(input, this.Body)
 		this.fs = fs ?? DBFS.from({})
 		this.logger = Logger.from(logger ?? {})
 	}
@@ -35,7 +32,7 @@ export default class Command extends UiMessage {
 	 * @returns {Promise<SpawnResult>}
 	 * @throws {Error}
 	 */
-	async _run(cmd, args = [], fail = "") {
+	async _run(cmd, args = [], fail = '') {
 		const result = await runSpawn(cmd, args)
 		if (0 !== result.code) {
 			this.logger.error(result.error)
@@ -45,7 +42,7 @@ export default class Command extends UiMessage {
 	}
 
 	/** @returns {AsyncGenerator<OutputMessage>} */
-	async * run() {
-		throw new Error("Must be extended")
+	async *run() {
+		throw new Error('Must be extended')
 	}
 }

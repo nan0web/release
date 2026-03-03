@@ -1,9 +1,9 @@
-import { describe, it } from "node:test"
-import { strictEqual } from "node:assert"
-import MarkdownToTest from "./MarkdownToTest.js"
+import { describe, it } from 'node:test'
+import { strictEqual } from 'node:assert'
+import MarkdownToTest from './MarkdownToTest.js'
 
-describe.skip("MarkdownToTest", () => {
-	it("should generate node:test code from markdown release notes", () => {
+describe.skip('MarkdownToTest', () => {
+	it('should generate node:test code from markdown release notes', () => {
 		const parser = new MarkdownToTest()
 		const markdown = `# v1.1.0 - 2025-08-19
 
@@ -52,7 +52,7 @@ describe("v1.1.0 - 2025-08-19", () => {
 
 		try {
 			parser.generateTests(markdown)
-			throw new Error("Should have thrown an error")
+			throw new Error('Should have thrown an error')
 		} catch (error) {
 			strictEqual(error.message, 'Markdown must start with version header: # vX.Y.Z - YYYY-MM-DD')
 		}

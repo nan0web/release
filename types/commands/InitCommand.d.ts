@@ -1,20 +1,25 @@
-export default InitCommand;
-/**
- * InitCommand – scaffolds a new release directory with the minimal set of
- * files required for a functional release (release.js, release.md and a
- * placeholder task folder).  The command is deliberately tiny – it only
- * creates the filesystem layout and writes a tiny starter release object.
- *
- * Usage:
- *   release init v1.0.0
- */
-declare class InitCommand extends SubCommand {
-    /**
-     * Run the init process.
-     *
-     * @param {AppCommandMessage} msg – command context (contains parsed options)
-     */
-    run(msg: AppCommandMessage): Promise<void>;
+export default class InitCommand extends Command {
+    static name: string;
+    static help: string;
+    static Body: typeof InitBody;
+    /** @param {Partial<Command> & { body?: Partial<InitBody> }} [input={}] */
+    constructor(input?: Partial<Command> & {
+        body?: Partial<InitBody>;
+    });
+    body: InitBody;
+    run(): AsyncGenerator<OutputMessage, void, unknown>;
 }
-import SubCommand from "./SubCommand.js";
-import AppCommandMessage from "../co/AppCommandMessage.js";
+import Command from './Command.js';
+declare class InitBody {
+    static version: {
+        help: string;
+        defaultValue: string;
+    };
+    constructor({ version }?: {
+        version?: string | undefined;
+    });
+    /** @type {string} */
+    version: string;
+}
+import { OutputMessage } from '@nan0web/co';
+export {};

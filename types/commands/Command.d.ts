@@ -3,9 +3,9 @@ export default class Command extends UiMessage {
     /**
      * @param {Partial<UiMessage> & {  }} [input={}]
      */
-    constructor(input?: Partial<UiMessage> | undefined);
-    /** @type {DB} */
-    fs: DB;
+    constructor(input?: Partial<UiMessage> & {});
+    /** @type {DBFS} */
+    fs: DBFS;
     /** @type {Logger} */
     logger: Logger;
     get Body(): new () => {};
@@ -17,12 +17,12 @@ export default class Command extends UiMessage {
      * @returns {Promise<SpawnResult>}
      * @throws {Error}
      */
-    _run(cmd: string, args?: string[] | undefined, fail?: string | undefined): Promise<SpawnResult>;
+    _run(cmd: string, args?: string[], fail?: string): Promise<SpawnResult>;
     /** @returns {AsyncGenerator<OutputMessage>} */
     run(): AsyncGenerator<OutputMessage>;
 }
 export type SpawnResult = import("@nan0web/test/types/exec/runSpawn").SpawnResult;
-import { UiMessage } from "@nan0web/ui";
-import DB from "@nan0web/db";
-import Logger from "@nan0web/log";
-import { OutputMessage } from "@nan0web/co";
+import { UiMessage } from '@nan0web/ui';
+import DBFS from '@nan0web/db-fs';
+import Logger from '@nan0web/log';
+import { OutputMessage } from '@nan0web/co';

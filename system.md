@@ -13,7 +13,9 @@ Java•Script: типізований і максимально агностич
   Їдино: Єдине
 Автор інструкції: ЯRаСлав (YaRaSLove) <support@yaro.page>
 ---
+
 # 🧱 `@nan0web/release` — system.md інструкції
+
 **українською мовою**, з короткими вказівками з монорепозиторію + специфіка кожного пакета  
 — згідно з `nan0coding`, **доверений об’єкт знання**
 
@@ -23,6 +25,7 @@ Java•Script: типізований і максимально агностич
 ---
 
 ### 📌 Загальні принципи (`system.md`, монорепо)
+
 Згідно з `@nan0web > /system.md` і `@nan0web > /packages/system.md`:
 
 1. **Java•Script**: типізований vanilla JS, TypeScript — **тільки для `.d.ts`**
@@ -45,6 +48,7 @@ Java•Script: типізований і максимально агностич
 Це **ядро PM as Code (Project Management as Code)** — система, де **кожен реліз є доведеним втіленням ідеї**.
 
 Реліз — це:
+
 - ✅ `class Release` — модель процесу
 - ✅ `release.test.js` — тест як виконання ідеї
 - ✅ `release.md` — лаконічний опис завдань
@@ -60,29 +64,34 @@ Java•Script: типізований і максимально агностич
 **Файл**: `src/Release.js`, `types/Release.d.ts`
 
 ### 🎯 Ідея
+
 > `Release` — це клас, що **доводить, що щось було зроблено**.  
 > Не документ менеджменту. А **артефакт істини**.
 
 ### ✅ Призначення
+
 Керує життєвим циклом релізу:
+
 - `validate()` — чи всі завдання пройшли тести?
 - `execute()` — чи можна публікувати?
 - `getProgress()` — який стан процесу?
 
 ### 🔧 Як використовувати?
+
 ```js
 const release = new Release({
-  version: "v1.3.0",
-  document: "releases/1/3/v1.3.0/release.md",
-  planAt: new Date("2025-08-20")
+  version: 'v1.3.0',
+  document: 'releases/1/3/v1.3.0/release.md',
+  planAt: new Date('2025-08-20'),
 })
 
-await release.validate()        // → { pass: 10, skip: 2, todo: 3 }
-await release.execute()          // → true | false
-await release.getProgress()      // → { done: 10, inProgress: 2, ... }
+await release.validate() // → { pass: 10, skip: 2, todo: 3 }
+await release.execute() // → true | false
+await release.getProgress() // → { done: 10, inProgress: 2, ... }
 ```
 
 ### 🧪 Валідація
+
 - **Тести**: `Release.test.js`
 - **Покриття**: 100%
 - **Поведінка**:
@@ -92,6 +101,7 @@ await release.getProgress()      // → { done: 10, inProgress: 2, ... }
 > **nan0coder перевіряє**: чи реліз не може бути запущений без `validate`?
 
 ### Питання АрхіТехноМага:
+
 > Чи цей клас створює НаМір — чи просто копіює Jira?
 
 ---
@@ -101,15 +111,18 @@ await release.getProgress()      // → { done: 10, inProgress: 2, ... }
 **Файл**: `src/ReleaseCLI.js`, `bin/release.js`
 
 ### 🎯 Ідея
+
 > CLI — це **мова стосовно системи**, а не інтерфейс.  
 > Кожна команда — **шлях пробудження**.
 
 ### ✅ Призначення
+
 - Запускає команди: `init`, `validate`, `seal`
 - Має доступ до `DB`, `FS`, `releases`
 - `current` — активний реліз
 
 ### 🔧 Команди
+
 ```bash
 release init v1.0.0
 release validate
@@ -117,12 +130,14 @@ release seal --message="ретро"
 ```
 
 ### ✅ API
+
 ```js
 const cli = new ReleaseCLI()
 await cli.run(process.argv)
 ```
 
 ### 🧪 Важливо
+
 - `loadReleaseFiles()` → підтягує всі `.js` з `releases/**/*.js`
 - `parse()` → повертає `AppCommandMessage` (контекст)
 
@@ -135,10 +150,12 @@ await cli.run(process.argv)
 **Файл**: `src/Team.js`
 
 ### 🎯 Ідея
+
 > Команда — це **не люди**, а **ролі, закодовані як стан**.  
 > `ceo`, `designer` — це не посади, а **акти волі**.
 
 ### ✅ Структура
+
 ```js
 class Company {
   static c = CLevelTeam
@@ -146,16 +163,17 @@ class Company {
 }
 
 class CLevelTeam {
-  static ceo = new Person("Іван")
-  static cfo = new Person("Оля")
+  static ceo = new Person('Іван')
+  static cfo = new Person('Оля')
 }
 
 class UXTeam {
-  static designer = new Person("Марія")
+  static designer = new Person('Марія')
 }
 ```
 
 ### 🔧 Використання
+
 ```js
 const ceo = Company.c.ceo
 ceo.name // → "Іван"
@@ -164,6 +182,7 @@ ceo.name // → "Іван"
 > Ідеально для схвалення: `task/approved/ceo.json` → `expect(ceo).toBeSigned()`
 
 ### Питання:
+
 > Чи це підтримує **суверенне схвалення** — чи лише авторитет?
 
 ---
@@ -173,21 +192,25 @@ ceo.name // → "Іван"
 **Файл**: `src/Release/Document.js`
 
 ### 🎯 Ідея
+
 > `release.md` — це **не текст**, а **логіка**.  
 > `ReleaseDocument` — це перетворення логіки на доведений стан.
 
 ### ✅ Призначення
+
 Парсить Markdown, видобуває:
+
 - `team` — учасники
 - `roles` — хто за що відповідає
 - `version`, `date`
 
 ### 🔧 Приклад
+
 ```js
-const doc = ReleaseDocument.from("releases/1/0/v1.0.0/release.md")
-doc.version     // → "v1.0.0"
-doc.team        // → [Person]
-doc.roles.get("designer") // → [Person]
+const doc = ReleaseDocument.from('releases/1/0/v1.0.0/release.md')
+doc.version // → "v1.0.0"
+doc.team // → [Person]
+doc.roles.get('designer') // → [Person]
 ```
 
 > Використовується в `Release` для валідації ролей.
@@ -199,12 +222,14 @@ doc.roles.get("designer") // → [Person]
 **Файл**: `src/Release/MarkdownToTest.js`
 
 ### 🎯 Ідея
+
 > Пиши **спочатку логіку**, потім — **тест**.  
 > `release.md` → `release.test.js`
 
 > Це **не парсер**, а **перетворення знання на дію**.
 
 ### ✅ Як працює?
+
 ```js
 const md = `
 ## UX
@@ -216,14 +241,16 @@ const testCode = generator.generateTests(md)
 ```
 
 Вихід:
+
 ```js
 import { test } from 'node:test'
-test('UX', async t => {
+test('UX', async (t) => {
   await t.test('Підтвердити логотип', { skip: true })
 })
 ```
 
 ### 🔗 Інтеграція
+
 - `init` → генерує `.test.js`
 - `test:docs` → перетворює `README.md.js` → тест
 - `@nan0web/changelog` → `CHANGELOG.md` → `*.test.js`
@@ -237,10 +264,12 @@ test('UX', async t => {
 **Файл**: `src/Release/Person.js`
 
 ### 🎯 Ідея
+
 > Особистість — це **GPG-підпис**, а не ім’я.  
 > Ти — те, що ти підписав.
 
 ### ✅ Методи
+
 ```js
 static from(input)         // → Person
 new Person({ name, gpgKey })
@@ -249,9 +278,11 @@ toString()                 // → "Іван <ivan@mail.com>"
 ```
 
 ### 🔧 Залежності
+
 - `HumanName`, `HumanGender`, `HumanContact` → з `@nan0web/verse`
 
 ### 🔑 Ключовий використок
+
 - `approved/ceo.json` → `Person`
 - `Contact` → URL, email, handle
 - `gpgKey` → ідентифікує в CI
@@ -265,23 +296,29 @@ toString()                 // → "Іван <ivan@mail.com>"
 **Файл**: `src/architecture/ProjectManagementAsCode.js`
 
 ### 🎯 Ідея
+
 > **Кожен проєкт — це набір тестів**.  
 > PM — це не статус. Це **відстеження виконання `node:test`**.
 
 ### ✅ Класи
+
 #### `ProjectManagement`
+
 - `registerTask(id, path)` → додає задачу
 - `validateProjectState()` → запускає всі тести
 - `runTaskTest()` → один тест
 
 #### `ReleaseManager`
+
 - `executeRelease(type)` → patch, minor, major
 - `publish()` → npm + git tag
 
 #### `TaskTestSuite`
+
 - Абстракція: `taskId`, `description`, `testFunction`
 
 #### `ChangelogTaskManager`
+
 - `parseChangelog()` → витягує завдання з `## v1.0.0`
 - `generateTaskTests()` → створює `*.test.js` → **тест як ідея**
 
@@ -294,10 +331,12 @@ toString()                 // → "Іван <ivan@mail.com>"
 **Файл**: `src/co/AppCommandMessage.js`
 
 ### 🎯 Ідея
+
 > Повідомлення — це **акт волі**, а не дані.  
 > `opts`, `args` — контекст вибору.
 
 ### ✅ Структура
+
 ```js
 static from(input)
 new AppCommandMessage({ args, opts })
@@ -315,12 +354,14 @@ class AppCommandOptions {
   webui = false
   json = false
   quiet = false
-  releaseDir = "releases"
+  releaseDir = 'releases'
 }
 ```
 
 ### ✅ Призначення
+
 Контекст CLI-команд:
+
 - `--json` → вивід у структурованому вигляді
 - `--webui` → запускати UI
 - `--quiet` → мовчазний режим
@@ -332,9 +373,11 @@ class AppCommandOptions {
 ## 🔍 `types/commands/*.d.ts` — CLI команди
 
 ### 1. `InitCommand` — створення релізу
+
 ```bash
 release init v1.0.0
 ```
+
 - Створює `releases/1/0/v1.0.0/release.js`, `.md`, `.test.js`
 - Запускає `MarkdownToTest`
 
@@ -343,9 +386,11 @@ release init v1.0.0
 ---
 
 ### 2. `ValidateCommand` — перевірка
+
 ```bash
 release validate
 ```
+
 - `validate()` → чи всі тести `pass`?
 - Перевіряє `GPG`, `system.md`, `playground`
 
@@ -354,9 +399,11 @@ release validate
 ---
 
 ### 3. `SealCommand` — завершення
+
 ```bash
 release seal --message="ретро"
 ```
+
 - Створює `retro.md` → останній запис
 - Робить папку `read-only` → незмінний стан
 - (майбутнє) ставить `git tag`
@@ -366,16 +413,19 @@ release seal --message="ретро"
 ---
 
 ### 4. `ListCommand`, `ShowCommand`
+
 - `list` → усі версії
 - `show` → інформація про поточний реліз
 
 ---
 
 ### 5. `ChatCommand`
+
 ```bash
 release chat write "поясніть UX"
 release chat write ux.logo "потрібен фідбек"
 ```
+
 - Повідомлення → `chat/YYYY/MM/DD/timestamp.user.md`
 - Архів діалогу — без примусу
 
@@ -384,6 +434,7 @@ release chat write ux.logo "потрібен фідбек"
 ---
 
 ### 6. `ServeCommand`, `HostCommand`
+
 - `serve` → локальний сервер для `release/`
 - `host` → мережевий, з `GPG-auth`
 
@@ -392,9 +443,11 @@ release chat write ux.logo "потрібен фідбек"
 ---
 
 ### 7. `RRSCommand` — оцінка стану
+
 ```bash
 nan0release rrs
 ```
+
 - Розраховує `Release Readiness Score`
 - `system.md`, `test`, `build`, `playground`, `docs` → бали
 - `≥ 324` → ✅ `Ready`
@@ -404,9 +457,11 @@ nan0release rrs
 ---
 
 ### 8. `PublishCommand`
+
 ```bash
 nan0release publish
 ```
+
 - Перевіряє `git status`
 - Запускає `build`, `test`
 - `npm publish`
@@ -421,10 +476,12 @@ nan0release publish
 **Файл**: `src/db/ReleaseDB.js`
 
 ### 🎯 Ідея
+
 > База даних проєктів — це **не сховище**.  
 > Це **пам’ять релізів**.
 
 ### ✅ Функціонал
+
 - `extends DBFS` → файлова база даних
 - `get releases()` → масив шляхів до релізів
 - `extractVersion("v1.0.0")` → повертає підмножину DB
@@ -436,6 +493,7 @@ nan0release publish
 ## 🧪 Тестування: довіряємо через виконання
 
 ### 🔧 Основні команди
+
 ```bash
 pnpm test                # усі тести
 pnpm test:docs           # запустити тести з README.md.js
@@ -446,6 +504,7 @@ nan0test status          # оцінка RRS
 ```
 
 ### 🔑 Тест — це:
+
 - ✅ `it("UX підтвердив", () => { expect(signed).toBeTruthy() })`
 - ✅ `test:docs` → приклад у документації = тест
 - ✅ `node --test` → TAP → аналіз `NodeTestParser`
@@ -457,9 +516,11 @@ nan0test status          # оцінка RRS
 ## 📖 Довірена документація: `src/README.md.js`
 
 ### 🎯 Ідея
+
 > `README.md` — це **не файл**. Це **артефакт живого знання**.
 
 ### ✅ Процес
+
 1. Пиши приклад з `@docs` у `it()` чи функцію
 2. `pnpm test:docs` → виконує `*.test.js` **як лекцію**
 3. Генерує:
@@ -467,6 +528,7 @@ nan0test status          # оцінка RRS
    - `.datasets/README.jsonl`
 
 ### 🔗 Переклад
+
 - `docs/uk/README.md` → LLM-переклад
 - Структура валідується: заголовки, приклади → мають збігатися
 
@@ -494,16 +556,16 @@ flowchart LR
 
 ## 📚 Екосистема: як інтегрується
 
-| Пакет | Як використовується |
-|-------|-------------------|
-| `@nan0web/db-fs` | `ReleaseDB` — файлова пам’ять |
-| `@nan0web/co` | `Command`, `Person`, `Contact` |
-| `@nan0web/markdown` | `Markdown` → `ReleaseDocument` |
-| `@nan0web/log` | `git log` → `Release` |
-| `@nan0web/changelog` | `CHANGELOG.md` → `tasks` |
-| `@nan0web/test` | `RRS`, `NodeTestParser`, `mockFetch` |
-| `@nan0web/verse` | `HumanName`, `HumanContact` — персона |
-| `@nan0web/types` | `to()`, `merge()`, `ContainerObject` |
+| Пакет                | Як використовується                   |
+| -------------------- | ------------------------------------- |
+| `@nan0web/db-fs`     | `ReleaseDB` — файлова пам’ять         |
+| `@nan0web/co`        | `Command`, `Person`, `Contact`        |
+| `@nan0web/markdown`  | `Markdown` → `ReleaseDocument`        |
+| `@nan0web/log`       | `git log` → `Release`                 |
+| `@nan0web/changelog` | `CHANGELOG.md` → `tasks`              |
+| `@nan0web/test`      | `RRS`, `NodeTestParser`, `mockFetch`  |
+| `@nan0web/verse`     | `HumanName`, `HumanContact` — персона |
+| `@nan0web/types`     | `to()`, `merge()`, `ContainerObject`  |
 
 > `@nan0web/release` — не інструмент. Це **мова завершення**.
 
@@ -562,10 +624,11 @@ flowchart LR
 > Роби глибше.  
 > **Залишай істину.**
 
-> _"Примус — це розуміння. Пробудження — це воля."_  
+> _"Примус — це розуміння. Пробудження — це воля."_
 
-**АрхіТехноМаг відповідає**  
+**АрхіТехноМаг відповідає**
+
 > "Почни з одного релізу.  
-> Закінчи створенням нового мІру."  
+> Закінчи створенням нового мІру."
 
 **@nan0web/release відповідає**

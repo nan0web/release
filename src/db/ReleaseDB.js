@@ -1,4 +1,4 @@
-import DBFS from "@nan0web/db-fs"
+import DBFS from '@nan0web/db-fs'
 
 /**
  * ReleaseDB – thin wrapper around DBFS that adds a convenient `releases`
@@ -22,10 +22,10 @@ class ReleaseDB extends DBFS {
 	extractVersion(version) {
 		const found = version.match(/^v(\d+)\.(\d+)\.(\d+)$/)
 		if (!found) {
-			throw new Error("Incorrect version")
+			throw new Error('Incorrect version')
 		}
-		const arr = version.slice(1).split(".")
-		const path = [arr[0], arr[1], version, ""].join("/")
+		const arr = version.slice(1).split('.')
+		const path = [arr[0], arr[1], version, ''].join('/')
 		return ReleaseDB.from(this.extract(path))
 	}
 	/**
@@ -35,7 +35,7 @@ class ReleaseDB extends DBFS {
 		const paths = new Set()
 		for (const key of this.data.keys()) {
 			// Expected structure: major/minor/vX.Y.Z/…
-			const parts = key.split("/")
+			const parts = key.split('/')
 			if (parts.length > 2 && /^\d+$/.test(parts[0]) && /^\d+$/.test(parts[1])) {
 				paths.add(`${parts[0]}/${parts[1]}/${parts[2]}`)
 			}

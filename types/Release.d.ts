@@ -2,6 +2,7 @@
  * @typedef {Object} ReleaseConfig
  * @property {string} [version] - Release version
  * @property {string | number | Date | undefined} [createdAt] -
+ * @property {string | number | Date | undefined} [date] - Alias for createdAt
  * @property {string | number | Date | undefined} [startAt] -
  * @property {string | number | Date | undefined} [planAt] -
  * @property {string | number | Date | undefined} [completeAt] -
@@ -64,6 +65,10 @@ export type ReleaseConfig = {
      */
     createdAt?: string | number | Date | undefined;
     /**
+     * - Alias for createdAt
+     */
+    date?: string | number | Date | undefined;
+    /**
      * -
      */
     startAt?: string | number | Date | undefined;
@@ -84,5 +89,5 @@ export type ReleaseConfig = {
      */
     tasks?: Map<string, Function> | undefined;
 };
-import ReleaseDocument from "./Release/Document.js";
+import ReleaseDocument from './Release/Document.js';
 import Logger from '@nan0web/log';

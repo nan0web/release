@@ -4,7 +4,7 @@ import {
 	ProjectManagement,
 	ReleaseManager,
 	TaskTestSuite,
-	ChangelogTaskManager
+	ChangelogTaskManager,
 } from './ProjectManagementAsCode.js'
 
 describe('ProjectManagementAsCode Architecture', () => {
@@ -74,7 +74,7 @@ describe('ProjectManagementAsCode Architecture', () => {
 			rm.projectManager.validateProjectState = async () => ({
 				passed: [],
 				failed: ['task-1'],
-				pending: []
+				pending: [],
 			})
 
 			try {
@@ -88,7 +88,7 @@ describe('ProjectManagementAsCode Architecture', () => {
 
 	describe('TaskTestSuite', () => {
 		it.skip('should extend TestSuite with task metadata', () => {
-			const testFunction = () => { }
+			const testFunction = () => {}
 			const taskSuite = new TaskTestSuite('task-1', 'Test task description', testFunction)
 
 			assert.equal(taskSuite.taskId, 'task-1')
@@ -117,7 +117,7 @@ describe('ProjectManagementAsCode Architecture', () => {
 			const ctm = new ChangelogTaskManager()
 			const tasks = [
 				{ id: 'task-1', description: 'Implement feature A' },
-				{ id: 'task-2', description: 'Fix bug B' }
+				{ id: 'task-2', description: 'Fix bug B' },
 			]
 
 			// This should not throw an error

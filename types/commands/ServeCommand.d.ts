@@ -7,11 +7,11 @@
  *   release serve [--port <number>]
  */
 export default class ServeCommand extends SubCommand {
-    /**
-     * Start the static server.
-     *
-     * @param {Object} ctx – command context
-     */
-    run(ctx: any): Promise<void>;
+	/**
+	 * Start the static server.
+	 *
+	 * @param {Object} ctx – command context
+	 */
+	run(ctx: any): Promise<void>
 }
-import SubCommand from "./SubCommand.js";
+import SubCommand from './SubCommand.js'
