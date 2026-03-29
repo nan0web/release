@@ -1,6 +1,6 @@
 # @nan0web/release — Anti-Gravity Release Protocol (AGRP)
 
-> **Status**: READY FOR RELEASE v1.0.2
+> **Status**: READY FOR RELEASE v1.0.3 (CLOSED)
 > **Priority**: HIGH
 > **Date**: 2026-03-03
 
@@ -27,7 +27,7 @@
 - [x] Оновлення архітектурних стандартів (`universal-project.md`) та створення стандарту `docs-site.md` з інтеграцією Economy.
 - [x] Knip-валідація пройдена, старі файли підчищені, тести ідеально зелені.
 
-## CLI Команди (v1.0.2) ✅
+## CLI Команди (v1.0.3) ✅
 
 - [x] **`nan0release init [version]`**: Згенерувати структуру `releases/{version}`, підготувати шаблон `task.md` та порожні тести `*.spec.js`.
 - [x] **`nan0release spec [version]`**: Запустити всі `*.spec.js` (перевірка поточного активного релізу).
@@ -36,7 +36,7 @@
 - [x] **Scanner.js**: `findTests()` оновлено — тепер шукає контракти в обох `releases/` та `src/releases/`.
 - [x] **TSC Build**: Типізацію виправлено, `tsc` проходить без помилок.
 
-## Готовність до релізу v1.0.2
+## Готовність до релізу v1.0.3
 
 | Крок                  | Статус                     |
 | --------------------- | -------------------------- |
@@ -44,8 +44,8 @@
 | `npm run test:docs`   | ✅ 23 tests, 0 fail        |
 | `npm run build` (tsc) | ✅ 0 errors                |
 | `npm run knip`        | ✅ clean                   |
-| version bump          | ⏳ `package.json` → 1.0.2  |
-| `npm pack --dry-run`  | ⏳ перевірити `.npmignore` |
+| version bump          | ✅ `package.json` → 1.0.3  |
+| `npm pack --dry-run`  | ✅ passed (verified)      |
 | `git commit`          | ⏳ чекаємо підтвердження   |
 | `npm publish`         | ⏳ чекаємо підтвердження   |
 
