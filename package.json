@@ -1,6 +1,6 @@
 {
 	"name": "@nan0web/release",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Project Management as Code, Git-Native, GPG-Signed, Test-Driven",
 	"main": "src/index.js",
 	"types": "types/index.d.ts",
@@ -30,21 +30,21 @@
 		"playground": "node playground/main.js"
 	},
 	"dependencies": {
-		"@nan0web/changelog": "*",
-		"@nan0web/co": "*",
-		"@nan0web/db": "*",
-		"@nan0web/db-fs": "*",
-		"@nan0web/log": "*",
-		"@nan0web/markdown": "*",
-		"@nan0web/types": "*",
-		"@nan0web/ui": "*",
-		"@nan0web/ui-cli": "*",
-		"@nan0web/verse": "*",
+		"@nan0web/changelog": "^1.0.0",
+		"@nan0web/co": "^2.0.0",
+		"@nan0web/db": "^1.3.3",
+		"@nan0web/db-fs": "^1.1.4",
+		"@nan0web/log": "^1.1.1",
+		"@nan0web/markdown": "^1.0.2",
+		"@nan0web/types": "^1.4.0",
+		"@nan0web/ui": "^1.8.0",
+		"@nan0web/ui-cli": "^2.9.0",
+		"@nan0web/verse": "^1.0.0",
 		"supports-color": "^10.2.2"
 	},
 	"devDependencies": {
-		"@nan0web/test": "*",
+		"@nan0web/test": "^1.1.3",
 		"husky": "^9.1.7",
-		"knip": "^5.85.0"
+		"knip": "^5.86.0"
 	}
 }
